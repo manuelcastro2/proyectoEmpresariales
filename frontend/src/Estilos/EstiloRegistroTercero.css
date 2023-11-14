@@ -1,0 +1,165 @@
+.container-RegistroTercero {
+    width: 700px;
+    height: 450px;
+    background-color: #ffff;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 5px;
+}
+
+.container-RegistroTercero2 {
+    width: 500px;
+    height: 450px;
+    background-color: #ffff;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 5px;
+}
+
+.container-RegistroTercero3 {
+    width: 850px;
+    height: 450px;
+    background-color: #ffff;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    border-radius: 5px;
+}
+
+.container-interno-Tercero {
+    width: 600px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+.container-interno-Tercero2 {
+    width: auto;
+    height: 350px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container-interno-Tercero3 {
+    width: 990px;
+    height: 350px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container-Input {
+    position: relative;
+    padding: 20px 0 0;
+    width: 100%;
+    max-width: 300px;
+}
+
+.separacion {
+    margin-top: 20px;
+}
+
+.label-tercero {
+    position: absolute;
+    top: 0;
+    left: 30px;
+    display: block;
+    transition: 0.2s;
+    font-size: 17px;
+    color: #1b1b1b;
+    pointer-events: none;
+}
+
+.Input-text {
+    font-family: inherit;
+    width: 90%;
+    border: none;
+    border-bottom: 2px solid #1b1b1b;
+    outline: 0;
+    font-size: 17px;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+
+.Input-text::placeholder {
+    color: transparent;
+}
+
+.Input-text:placeholder-shown~.label-tercero {
+    font-size: 17px;
+    cursor: text;
+    top: 20px;
+}
+
+.Input-text:focus {
+    padding-bottom: 6px;
+    border-width: 3px;
+    border-image: linear-gradient(to right, #1F3847, #72A1C0);
+    border-image-slice: 1;
+}
+
+.Input-text:focus~.label-tercero {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 17px;
+    color: #454d5f;
+    font-weight: 700;
+}
+
+.Input-text:required,
+.Input-text:invalid {
+    box-shadow: none;
+}
+
+.Button-Exit {
+    color: #1b1b1b;
+    font-size: 20px;
+    font-weight: 700;
+    position: absolute;
+    right: 310px;
+    top: 70px;
+    background: white;
+}
+
+.Button-Exit2 {
+    color: #1b1b1b;
+    font-size: 20px;
+    font-weight: 700;
+    position: absolute;
+    right: 415px;
+    top: 70px;
+    background: white;
+}
+
+.Button-Exit3 {
+    color: #1b1b1b;
+    font-size: 20px;
+    font-weight: 700;
+    position: absolute;
+    right: 240px;
+    top: 70px;
+    background: white;
+}
+
+.titulo {
+    color: #1b1b1b;
+}
