@@ -14,6 +14,7 @@ const RegisterUsuario = ({ Actualizar }) => {
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
     const [EstadoAlertAgregarProducto, setEstadoAlertAgregarProducto] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [loading2, setLoading2] = useState(false)
     const [TodosProductos, setTodosProductos] = useState([])
     const arreglo = []
 
@@ -30,9 +31,15 @@ const RegisterUsuario = ({ Actualizar }) => {
     }
 
     useEffect(() => {
+
+        if (productos != []) {
+            setLoading(true)
+        }
+
         if (Actualizar != undefined) {
             getIdBodega()
         }
+
 
     }, [])
 
@@ -42,14 +49,90 @@ const RegisterUsuario = ({ Actualizar }) => {
                 setId(item._id)
                 setProductos(item.productos);
             })
+            setLoading(false)
         })
 
     }
 
     const getAllProductos = async () => {
+        setLoading2(true)
         await axios.get(endpoint2).then(response => {
             setTodosProductos(response.data.products)
         })
+        setLoading2(false)
+    }
+
+    const MostrarModalAgregarProductos = () => {
+        return (
+            <div>
+                {loading2 ? (
+                    <div className='container-Fondo'>
+                        <div className='container-RegistroTercero3'>
+                            <PantallaCarga></PantallaCarga>
+                        </div>
+                    </div>
+                ) : (
+                    <div className='container-Fondo'>
+                        <div className='container-RegistroTercero3'>
+                            <button type="submit"
+                                className='Button-Exit3'
+                                onClick={() => {
+                                    getIdBodega()
+                                    setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)
+                                }}>X</button>
+                            <h1 id='titulo-producto'>
+                                Agregar productos
+                            </h1>
+                            <div className='container-informacion2'>
+                                {TodosProductos.map((item) => (
+                                    <div className='container-productos'>
+                                        <div className='caja-producto'>
+                                            <div className='container-codigo'>
+                                                {item.codigoProducto}
+                                            </div>
+                                            <div className='container-nombre'>
+                                                {item.nombre}
+                                            </div>
+                                        </div>
+                                        <div className='caja-contenido'>
+                                            <div className='caja-elemento'>
+                                                Tipo: {item.tipoProducto}
+                                            </div>
+                                            <div className='caja-elemento'>
+                                                Unidad medida:{item.unidadMedida}
+                                            </div>
+                                            <div className='caja-elemento'>
+                                                Valor unitario{item.valorUnitario}
+                                            </div>
+                                            <div className='caja-elemento'>
+                                                Existencias: {item.existencias}
+                                            </div>
+                                            <div className='caja-elemento'>
+                                                <label for=""><input type="checkbox" onChange={() => {
+                                                    arreglo.push({
+                                                        codigo: item.codigoProducto,
+                                                        nombre: item.nombre,
+                                                        tipoProducto: item.tipoProducto,
+                                                        unidadMedida: item.unidadMedida,
+                                                        valorUnitario: item.valorUnitario,
+                                                        Existencias: item.existencias,
+                                                        PorcentajeIva: item.porcentaje
+                                                    })
+                                                }} />Agregar</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <button className='Button-acciones'
+                                type="submit"
+                                onClick={Save}
+                            >Agregar</button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        )
     }
 
     return (
@@ -62,7 +145,7 @@ const RegisterUsuario = ({ Actualizar }) => {
                 </div>
             ) : (
                 <div className='container-RegistroTercero3'>
-                    <h1 className='container-titulo'>
+                    <h1 className='container-titulo-productos'>
                         Productos
                     </h1>
                     <div className='container-button-agregar'>
@@ -123,65 +206,7 @@ const RegisterUsuario = ({ Actualizar }) => {
                 </div>
             )}
             {EstadoAlertAgregarProducto &&
-                <div className='container-Fondo'>
-                    <div className='container-RegistroTercero3'>
-                        <button type="submit"
-                            className='Button-Exit3'
-                            onClick={() => {
-                                getIdBodega()
-                                setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)
-                            }}>X</button>
-                        <h1 id='titulo-producto'>
-                            Agregar productos
-                        </h1>
-                        <form onSubmit={Save}>
-                            <div className='container-informacion'>
-                                {TodosProductos.map((item) => (
-                                    <div className='container-productos'>
-                                        <div className='caja-producto'>
-                                            <div className='container-codigo'>
-                                                <input type="text" name="" value={item.codigoProducto} disabled />
-                                            </div>
-                                            <div className='container-nombre'>
-                                                {item.nombre}
-                                            </div>
-                                        </div>
-                                        <div className='caja-contenido'>
-                                            <div className='caja-elemento'>
-                                                Tipo: {item.tipoProducto}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                Unidad medida:{item.unidadMedida}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                Valor unitario{item.valorUnitario}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                Existencias: {item.existencias}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                <label for=""><input type="checkbox" onChange={() => {
-                                                    arreglo.push({
-                                                        codigo: item.codigoProducto,
-                                                        nombre: item.nombre,
-                                                        tipoProducto: item.tipoProducto,
-                                                        unidadMedida: item.unidadMedida,
-                                                        valorUnitario: item.valorUnitario,
-                                                        Existencias: item.existencias,
-                                                        PorcentajeIva: item.porcentaje
-                                                    })
-                                                }} />Agregar</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                                )
-                                }
-                            </div>
-                            <button className='Button-acciones' type="submit">Agregar</button>
-                        </form>
-                    </div>
-                </div>
+                MostrarModalAgregarProductos()
             }
             {EstadoAlertAccion &&
                 <div className='container-Fondo'>

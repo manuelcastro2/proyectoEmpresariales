@@ -15,14 +15,15 @@ function SingUp() {
     const [clave, setClave] = useState('')
     const [loading, setLoading] = useState(false)
     const [FalloSesion, setFalloSesion] = useState(false)
-    
+
     const navigate = useNavigate()
 
     const Datos = async () => {
-        setLoading(true)
-        await axios.get(`${endpoint}/${cedula}/${clave}`).then(datos => {
-            console.log(datos.data.users);
-            if (datos.data.users.length != 0 && datos.data) {
+        if (cedula != '' && clave != '') {
+            setLoading(true)
+            console.log(clave);
+            console.log(cedula);
+            await axios.get(`${endpoint}/inicio/${cedula}/${clave}`).then(datos => {
                 setLoading(false)
                 datos.data.users.forEach((item) => {
                     navigate('/menu', {
@@ -36,10 +37,10 @@ function SingUp() {
                         }
                     })
                 })
-            } else {
-                setFalloSesion(true)
-            }
-        })
+            })
+        } else {
+            setFalloSesion(true)
+        }
     }
 
     const recibiendoCedula = (event) => {
@@ -59,7 +60,7 @@ function SingUp() {
     if (loading) {
         return (
             <div className='container-principal'>
-                <PantallaCarga/>
+                <PantallaCarga />
             </div>
         )
     } else {

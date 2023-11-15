@@ -6,13 +6,13 @@
     top: 10px;
 }
 
-th{
+th {
     background-color: #72A1C0;
 }
 
 .container-informacion {
-    min-width: 90%;
-    height: 100%;
+    width: 90%;
+    min-height: 70%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -22,13 +22,25 @@ th{
     gap: 10px;
 }
 
-.container-button-agregar{
+.container-informacion2 {
+    width: 90%;
+    height: 70%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    text-transform: capitalize;
+    gap: 10px;
+}
+
+.container-button-agregar {
     width: 90%;
     display: flex;
     justify-content: space-between;
 }
 
-.button-agregar{
+.button-agregar {
     padding: 7px 14px;
     background: transparent;
     border-radius: 3px;
@@ -36,42 +48,41 @@ th{
     font-weight: 500;
 }
 
-.button-agregar:hover{
+.button-agregar:hover {
     box-shadow: 0px 0px 5px #0C161C;
 }
 
-.button-agregar:focus{
+.button-agregar:focus {
     background-color: #0C161C;
     color: white;
 }
 
-.container-productos{
+.container-productos {
     border: 1px solid black;
-    width: 45%;
-    max-height: 110px;
+    width: 49%;
+    height: 105px;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
-.caja-producto{
+.caja-producto {
     width: 100%;
     height: auto;
     display: flex;
 }
 
-.container-codigo{
+.container-codigo {
     width: 30%;
     border-bottom: 1px solid black;
 }
 
-.container-nombre{
+.container-nombre {
     width: 70%;
     border-bottom: 1px solid black;
     border-left: 1px solid black;
 }
 
-.caja-contenido{
+.caja-contenido {
     width: 100%;
     height: auto;
     display: flex;
@@ -80,15 +91,19 @@ th{
     justify-content: baseline;
 }
 
-.caja-elemento{
+.caja-elemento {
     margin-left: 10px;
     margin-right: 2px;
-    font-size: 15px;
+    font-size: 14.5px;
     width: 45%;
     text-align: justify;
 }
 
-#titulo-producto{
+#titulo-producto {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+}
+
+.password{
+    margin-left: 5px;
 }

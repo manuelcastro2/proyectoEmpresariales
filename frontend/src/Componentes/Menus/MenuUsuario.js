@@ -167,7 +167,7 @@ const MenuTercero = () => {
                                     Documento: {item.cedula}
                                 </div>
                                 <div className='text-Mostrar'>
-                                    Clave: {item.clave}
+                                    Clave:<input className='password' type="password" value={item.clave} disabled />
                                 </div>
                                 <div className='text-Mostrar'>
                                     <button className='Button-acciones' onClick={() => {

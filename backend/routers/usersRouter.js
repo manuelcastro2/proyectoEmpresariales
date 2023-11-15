@@ -38,7 +38,7 @@ usuarioRouter.delete('/:id', (req, res) => {
 })
 
 //promesa de iniciar sesion
-usuarioRouter.get('/:documento/:clave', (req, res) => {
+usuarioRouter.get('/inicio/:documento/:clave', (req, res) => {
     usuarios.find({
         cedula: req.params.documento,
         clave: req.params.clave
