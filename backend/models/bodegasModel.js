@@ -8,6 +8,7 @@ const bodegasShema = new conexion.Schema({
     },
     direccion: { type: String },
     productos: [{
+        codigo:{type:Number},
         nombre: { type: String },
         tipoProducto: { type: String },
         unidadMedida: { type: String },

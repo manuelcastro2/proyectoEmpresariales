@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './../../Estilos/EstiloVisualizar.css'
+import PantallaCarga from './../Menus/PantallaCarga';
 
 const endpoint = 'http://localhost:3333/bodegas/'
 const endpoint2 = 'http://localhost:3333/productos/'
@@ -12,30 +13,38 @@ const RegisterUsuario = ({ Actualizar }) => {
     const [Accion, setAccion] = useState("")
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
     const [EstadoAlertAgregarProducto, setEstadoAlertAgregarProducto] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [TodosProductos, setTodosProductos] = useState([])
-    const [GuardarProductos, setGuardarProductos] = useState([])
-    let array = []
+    const arreglo = []
 
     const Save = async (e) => {
         e.preventDefault();
-        console.log(GuardarProductos);
+        const response = await axios.patch(endpoint, {
+            _id: Id,
+            productos: arreglo
+        })
+        if (response.data !== undefined) {
+            setAccion("agrego")
+        }
         setEstadoAlertAccion(!EstadoAlertAccion)
     }
 
     useEffect(() => {
         if (Actualizar != undefined) {
-            const getIdBodega = async () => {
-                await axios.get(`${endpoint}${Actualizar}`).then(response => {
-                    response.data.bodegas.forEach((item) => {
-                        setProductos(item.productos);
-                    })
-                })
-
-            }
             getIdBodega()
         }
 
     }, [])
+
+    const getIdBodega = async () => {
+        await axios.get(`${endpoint}${Actualizar}`).then(response => {
+            response.data.bodegas.forEach((item) => {
+                setId(item._id)
+                setProductos(item.productos);
+            })
+        })
+
+    }
 
     const getAllProductos = async () => {
         await axios.get(endpoint2).then(response => {
@@ -44,83 +53,84 @@ const RegisterUsuario = ({ Actualizar }) => {
     }
 
     return (
-        <div className='container-RegistroTercero3'>
-            <h1 className='container-titulo'>
-                Productos
-            </h1>
-            <div className='container-button-agregar'>
-                <button type="submit" className='button-agregar'>Traslado</button>
-                <button type="submit"
-                    className='button-agregar'
-                    onClick={() => {
-                        setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)
-                        getAllProductos()
-                    }}>Agregar</button>
-            </div>
-            <div className='container-informacion'>
-                <table className='container-tabla'>
-                    <tr>
-                        <th>
-                            nombre
-                        </th>
-                        <th>
-                            tipoProducto
-                        </th>
-                        <th>
-                            unidadMedida
-                        </th>
-                        <th>
-                            valorUnitario
-                        </th>
-                        <th>
-                            Existencias
-                        </th>
-                        <th>
-                            porcentajeIva
-                        </th>
-                    </tr>
-                    {productos.map((item) => (
-                        <tr >
-                            <td>
-                                {item.nombre}
-                            </td>
-                            <td>
-                                {item.tipoProducto}
-                            </td>
-                            <td>
-                                {item.unidadMedida}
-                            </td>
-                            <td>
-                                {item.valorUnitario}
-                            </td>
-                            <td>
-                                {item.Existencias}
-                            </td>
-                            <td>
-                                {item.PorcentajeIva}
-                            </td>
-                        </tr>
-                    ))}
-                </table>
-            </div>
-            {EstadoAlertAccion &&
-                <div className='container-Fondo'>
-                    <div className='Container-Alert'>
-                        <div className='Container-Alert-interno'>
-                            <p className='Text-Alert'>
-                                <span>Se {Accion} productos o productos a bodega</span>
-                                <button className='button-Alert' type="submit" onClick={() => setEstadoAlertAccion(!EstadoAlertAccion)}>Volver</button>
-                            </p>
-                        </div>
+        <div>
+            {loading ? (
+                <div className='container-RegistroTercero3'>
+                    <PantallaCarga>
+
+                    </PantallaCarga>
+                </div>
+            ) : (
+                <div className='container-RegistroTercero3'>
+                    <h1 className='container-titulo'>
+                        Productos
+                    </h1>
+                    <div className='container-button-agregar'>
+                        <button type="submit" className='button-agregar'>Traslado</button>
+                        <button type="submit"
+                            className='button-agregar'
+                            onClick={() => {
+                                setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)
+                                getAllProductos()
+                            }}>Agregar</button>
+                    </div>
+                    <div className='container-informacion'>
+                        <table className='container-tabla'>
+                            <tr>
+                                <th>
+                                    nombre
+                                </th>
+                                <th>
+                                    tipoProducto
+                                </th>
+                                <th>
+                                    unidadMedida
+                                </th>
+                                <th>
+                                    valorUnitario
+                                </th>
+                                <th>
+                                    Existencias
+                                </th>
+                                <th>
+                                    porcentajeIva
+                                </th>
+                            </tr>
+                            {productos.map((item) => (
+                                <tr >
+                                    <td>
+                                        {item.nombre}
+                                    </td>
+                                    <td>
+                                        {item.tipoProducto}
+                                    </td>
+                                    <td>
+                                        {item.unidadMedida}
+                                    </td>
+                                    <td>
+                                        {item.valorUnitario}
+                                    </td>
+                                    <td>
+                                        {item.Existencias}
+                                    </td>
+                                    <td>
+                                        {item.PorcentajeIva}
+                                    </td>
+                                </tr>
+                            ))}
+                        </table>
                     </div>
                 </div>
-            }
+            )}
             {EstadoAlertAgregarProducto &&
                 <div className='container-Fondo'>
                     <div className='container-RegistroTercero3'>
                         <button type="submit"
                             className='Button-Exit3'
-                            onClick={() => setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)}>X</button>
+                            onClick={() => {
+                                getIdBodega()
+                                setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)
+                            }}>X</button>
                         <h1 id='titulo-producto'>
                             Agregar productos
                         </h1>
@@ -150,15 +160,41 @@ const RegisterUsuario = ({ Actualizar }) => {
                                                 Existencias: {item.existencias}
                                             </div>
                                             <div className='caja-elemento'>
-                                                <label for=""><input type="checkbox" value={GuardarProductos} onChange={()=>setGuardarProductos(item.codigoProducto)} />Agregar</label>
+                                                <label for=""><input type="checkbox" onChange={() => {
+                                                    arreglo.push({
+                                                        codigo: item.codigoProducto,
+                                                        nombre: item.nombre,
+                                                        tipoProducto: item.tipoProducto,
+                                                        unidadMedida: item.unidadMedida,
+                                                        valorUnitario: item.valorUnitario,
+                                                        Existencias: item.existencias,
+                                                        PorcentajeIva: item.porcentaje
+                                                    })
+                                                }} />Agregar</label>
                                             </div>
                                         </div>
                                     </div>
-                                ))
+                                )
+                                )
                                 }
                             </div>
                             <button className='Button-acciones' type="submit">Agregar</button>
                         </form>
+                    </div>
+                </div>
+            }
+            {EstadoAlertAccion &&
+                <div className='container-Fondo'>
+                    <div className='Container-Alert'>
+                        <div className='Container-Alert-interno'>
+                            <p className='Text-Alert'>
+                                <span>Se {Accion} un producto o varios productos a bodega</span>
+                                <button className='button-Alert' type="submit" onClick={() => {
+                                    getIdBodega()
+                                    setEstadoAlertAccion(!EstadoAlertAccion)
+                                }}>Volver</button>
+                            </p>
+                        </div>
                     </div>
                 </div>
             }
