@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './../../Estilos/EstiloRegistroTercero.css'
+import { ConsultarDocumentoTercero, ActualizarTercero, AgregarTerceros } from './../../apis/ApiTerceros'
 
-const endpoint = 'http://localhost:3333/terceros/'
 
 function RegistrarTercero({ Actualizar }) {
 
@@ -18,16 +18,17 @@ function RegistrarTercero({ Actualizar }) {
 
     const Enviar = async (e) => {
         e.preventDefault();
+        const tercero = {
+            nombre: name,
+            tipoDocumento: tipoDoc,
+            documento: cedula,
+            direccion: direccion,
+            telefono: telefono,
+            tipoTercero: tipoTercero
+        }
         if (Actualizar === undefined) {
-            const response = await axios.post(endpoint, {
-                nombre: name,
-                tipoDocumento: tipoDoc,
-                documento: cedula,
-                direccion: direccion,
-                telefono: telefono,
-                tipoTercero: tipoTercero
-            })
-            if (response.data !== undefined) {
+            const response = AgregarTerceros(tercero)
+            if (response !== undefined) {
                 setAccion("guardo")
                 setCedula("")
                 setDireccion("")
@@ -37,16 +38,8 @@ function RegistrarTercero({ Actualizar }) {
                 setTipoTercero("")
             }
         } else {
-            const response = await axios.patch(`${endpoint}`, {
-                _id: Id,
-                nombre: name,
-                tipoDocumento: tipoDoc,
-                documento: cedula,
-                direccion: direccion,
-                telefono: telefono,
-                tipoTercero: tipoTercero
-            })
-            if (response.data !== undefined) {
+            const response = ActualizarTercero(tercero)
+            if (response!== undefined) {
                 setCedula("")
                 setDireccion("")
                 setName("")
@@ -62,24 +55,25 @@ function RegistrarTercero({ Actualizar }) {
 
     useEffect(() => {
         if (Actualizar != undefined) {
-            const getIdTercero = async () => {
-                const response = await axios.post(`${endpoint}documento`, { documento: Actualizar })
-                console.log(response.data);
-                response.data.thirds.forEach((item) => {
-                    setId(item._id)
-                    setName(item.nombre)
-                    setTipoDoc(item.tipoDocumento)
-                    setCedula(item.documento)
-                    setDireccion(item.direccion)
-                    setTelefono(item.telefono)
-                    setTipoTercero(item.tipoTercero)
-                })
-            }
+
             getIdTercero()
+
         }
     }, [])
 
-    console.log(Actualizar);
+    const getIdTercero = async () => {
+        const Resultado = ConsultarDocumentoTercero(Actualizar)
+        Resultado.then(datos => {
+            datos.thirds.forEach((item) => {
+                setName(item.nombre)
+                setTipoDoc(item.tipoDocumento)
+                setTipoTercero(item.tipoTercero)
+                setCedula(item.documento)
+                setDireccion(item.direccion)
+                setTelefono(item.telefono)
+            })
+        })
+    }
 
     return (
         <div className='container-RegistroTercero'>

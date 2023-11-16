@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-////para invocar al backend en la parte de productos
-const endpoint = 'http://localhost:3333/productos/'
+import { ActualizarProducto, AgregarProductos, ConsultarCodigoProducto } from './../../apis/ApiProductos'
+//para invocar al backend en la parte de productos
 
 const RegisterProducto = ({ Actualizar }) => {
 
@@ -15,7 +14,7 @@ const RegisterProducto = ({ Actualizar }) => {
     const [unidad, setUnidad] = useState("")
     const [valorUnitario, setValorUnitario] = useState(0)
     const [porcentajeIva, setPorcentajeIva] = useState(0)
-    const [existencia,setExistencia] = useState("")
+    const [existencia, setExistencia] = useState("")
     const [Accion, setAccion] = useState("")
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
 
@@ -24,18 +23,19 @@ const RegisterProducto = ({ Actualizar }) => {
     //las acciones del usuario para crear o actualizar un producto
     const Save = async (e) => {
         e.preventDefault();
+        const producto = {
+            codigoProducto: codeProduct,
+            nombre: product,
+            descripcion: descripcion,
+            tipoProducto: tipoProducto,
+            unidadMedida: unidad,
+            valorUnitario: valorUnitario,
+            existencias: existencia,
+            porcentaje: porcentajeIva
+        }
         if (Actualizar === undefined) {
-            const response = await axios.post(endpoint, {
-                codigoProducto: codeProduct,
-                nombre: product,
-                descripcion: descripcion,
-                tipoProducto: tipoProducto,
-                unidadMedida: unidad,
-                valorUnitario: valorUnitario,
-                existencias: existencia,
-                porcentaje: porcentajeIva
-            })
-            if (response.data !== undefined) {
+            const response = AgregarProductos(producto)
+            if (response !== undefined) {
                 setAccion("guardo")
                 setCodeProduct("")
                 setProduct("")
@@ -47,17 +47,8 @@ const RegisterProducto = ({ Actualizar }) => {
                 setExistencia("")
             }
         } else {
-            const response = await axios.patch(`${endpoint}`, {
-                codigoProducto: codeProduct,
-                nombre: product,
-                descripcion: descripcion,
-                tipoProducto: tipoProducto,
-                unidadMedida: unidad,
-                valorUnitario: valorUnitario,
-                existencias: existencia,
-                porcentaje: porcentajeIva
-            })
-            if (response.data !== undefined) {
+            const response = ActualizarProducto(producto)
+            if (response !== undefined) {
                 setCodeProduct("")
                 setProduct("")
                 setDescripcion("")
@@ -78,18 +69,21 @@ const RegisterProducto = ({ Actualizar }) => {
     useEffect(() => {
         if (Actualizar != undefined) {
             const getIdProducto = async () => {
-                const response = await axios.post(`${endpoint}codigoProducto`, { codigoProducto: Actualizar })
-                response.data.products.forEach((item) => {
-                    setId(item._id)
-                    setCodeProduct(item.codigoProducto)
-                    setDescripcion(item.descripcion)
-                    setProduct(item.nombre)
-                    setTipoProducto(item.tipoProducto)
-                    setUnidad(item.unidadMedida)
-                    setPorcentajeIva(item.porcentaje)
-                    setValorUnitario(item.valorUnitario)
-                    setExistencia(item.existencias)
+                const response = ConsultarCodigoProducto(Actualizar)
+                response.then(response=>{
+                    response.products.forEach((item) => {
+                        setId(item._id)
+                        setCodeProduct(item.codigoProducto)
+                        setDescripcion(item.descripcion)
+                        setProduct(item.nombre)
+                        setTipoProducto(item.tipoProducto)
+                        setUnidad(item.unidadMedida)
+                        setPorcentajeIva(item.porcentaje)
+                        setValorUnitario(item.valorUnitario)
+                        setExistencia(item.existencias)
+                    })
                 })
+                
             }
             getIdProducto()
         }

@@ -1,11 +1,12 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Inicio from './Componentes/InicioSesion'
-import Menu from './Componentes/Menus/MenuPrincipal'
-import MenuTercero from './Componentes/Menus/MenuTercero'
-import MenuUsuario from './Componentes/Menus/MenuUsuario'
-import MenuProducto from './Componentes/Menus/MenuProducto'
-import MenuBodega from './Componentes/Menus/MenuBodega'
+import Menu from './Componentes/general/MenuPrincipal'
+import MenuTercero from './Componentes/terceros/MenuTercero'
+import MenuUsuario from './Componentes/usuarios/MenuUsuario'
+import MenuProducto from './Componentes/productos/MenuProducto'
+import MenuBodega from './Componentes/bodegas/MenuBodega'
+import MenuFactura from './Componentes/facturas/MenuFactura'
 
 
 
@@ -20,6 +21,7 @@ function App() {
           <Route path='/menu/usuario' element={<MenuUsuario />}></Route>
           <Route path='/menu/producto' element={<MenuProducto />}></Route>
           <Route path='/menu/bodega' element={<MenuBodega />}></Route>
+          <Route path='/menu/factura' element={<MenuFactura />}></Route>
         </Routes>
       </BrowserRouter>
 

@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import './../../Estilos/EstiloMenu.css'
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import RegistrarBodegas from './../Modales/registerBodegas'
-import AgregarProductos from './../Modales/agregarProductosBodegas'
+import RegistrarUsuario from '../usuarios/registerUsers'
 //importacion de iconos
-import Banner from './Banner'
-import Panel from './Barra'
-import AlertRequerimiento from './AlertRequerimiento';
-import PantallaCarga from './PantallaCarga';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import Banner from '../general/Banner'
+import Panel from '../general/Barra'
+import AlertRequerimiento from '../general/AlertRequerimiento';
+import PantallaCarga from '../general/PantallaCarga';
 
 //para invocar al backend en la parte de usuarios
-const endpoint = 'http://localhost:3333/bodegas'
+const endpoint = 'http://localhost:3333/usuarios'
 const MenuTercero = () => {
 
     //metodo state y de estados de los datos del usuario del inicio de sesion
@@ -20,9 +21,12 @@ const MenuTercero = () => {
     const { state } = useLocation();
     const [DatosUsuario, setDatosUsuario] = useState("")
     const [DatosMostrar, setDatosMostrar] = useState([])
-    const [EstadoRegistrarBodegas, setEstadoRegistrarBodegas] = useState(false)
-    const [EstadoAgregarProductos, setEstadoAgregarProductos] = useState(false)
+    const [EstadoRegistrarUsuario, setEstadoRegistrarUsuario] = useState(false)
+    const [Mostraropciones, setMostraropciones] = useState(false)
     const [busqueda, setbusqueda] = useState("")
+    const [Mostraradministrador, setmostraradministrador] = useState(0)
+    const [Mostrarventas, setmostrarventas] = useState(0)
+    const [Mostrarbodegas, setmostrarbodegas] = useState(0)
     const [EstadoSesion, SetEstadoSesion] = useState(false)
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -41,27 +45,87 @@ const MenuTercero = () => {
     }, []);
 
     const Vista = () => {
-        if (busqueda.trim() != "") {
-            MostrarBusqueda()
+        if (Mostraradministrador == 1) {
+            MostrarAdministrador()
+        }
+
+        if (Mostrarbodegas == 2) {
+            MostrarBodegas()
+        }
+
+        if (Mostrarventas == 3) {
+            MostrarVentas()
         } else {
-            MostrarTodo()
+            if (busqueda.trim() != "") {
+                MostrarBusqueda()
+            } else {
+                MostrarTodo()
+            }
         }
     }
 
     const MostrarTodo = async () => {
         setLoading(true)
         await axios.get(`${endpoint}/`).then(datos => {
-            setDatosMostrar(datos.data.bodegas)
+            setDatosMostrar(datos.data.users)
             setLoading(false)
         })
+
+
     }
 
     const MostrarBusqueda = async () => {
-        const response = await axios.get(`${endpoint}/${busqueda}`)
-        setDatosMostrar(response.data.bodegas)
+        const response = await axios.post(`${endpoint}/documento`, { cedula: busqueda })
+        setDatosMostrar(response.data.users)
     }
 
-    const EliminarBodegas = async (id) => {
+    const MostrarAdministrador = async () => {
+        const response = await axios.get(`${endpoint}/administrador`)
+        setDatosMostrar(response.data.users)
+    }
+
+    const MostrarVentas = async () => {
+        const response = await axios.get(`${endpoint}/ventas`)
+        setDatosMostrar(response.data.users)
+    }
+
+    const MostrarBodegas = async () => {
+        const response = await axios.get(`${endpoint}/bodegas`)
+        setDatosMostrar(response.data.users)
+    }
+
+    const MostrarOpciones = () => {
+        if (Mostraropciones) {
+            return (
+                <div className='caja-opciones'>
+                    <button className='button-opciones-cliente' id='boton-cliente' value="administrador" type="submit"
+                        onClick={() => {
+                            setmostraradministrador(1)
+                            Vista()
+                        }} >Administrador
+                    </button>
+                    <div className='division'>
+                    </div>
+                    <button className='button-opciones-proveedor' id="boton-proveedor" value="bodegas" type="submit"
+                        onClick={() => {
+                            setmostrarbodegas(2)
+                            Vista()
+                        }}>Bodegas
+                    </button>
+                    <div className='division'>
+                    </div>
+                    <button className='button-opciones-proveedor' id="boton-proveedor" value="ventas" type="submit"
+                        onClick={() => {
+                            setmostrarventas(3)
+                            Vista()
+                        }}>Ventas
+                    </button>
+                </div>
+            )
+        }
+    }
+
+    const EliminarUsuario = async (id) => {
         if (DatosUsuario.id != id) {
             await axios.delete(`${endpoint}/${id}`)
             setDato("al usuario")
@@ -89,23 +153,28 @@ const MenuTercero = () => {
                         <div className='caja-vista'>
                             <div className='caja-vista-principal'>
                                 <div className='caja-principal'>
-                                    {item.nombre}
+                                    {item.rol}
                                 </div>
                                 <div className='caja-nombre'>
-                                    {item.direccion}
+                                    {item.nombre}
                                 </div>
                             </div>
                             <div className='caja-Datos' id="aumentar">
                                 <div className='text-Mostrar'>
+                                    Apellido: {item.apellido}
+                                </div>
+                                <div className='text-Mostrar'>
+                                    Documento: {item.cedula}
+                                </div>
+                                <div className='text-Mostrar'>
+                                    Clave:<input className='password' type="password" value={item.clave} disabled />
+                                </div>
+                                <div className='text-Mostrar'>
                                     <button className='Button-acciones' onClick={() => {
-                                        SetId(item.nombre)
-                                        setEstadoAgregarProductos(!EstadoAgregarProductos)
-                                    }} type="submit">Productos</button>
-                                    <button className='Button-acciones' onClick={() => {
-                                        SetId(item.nombre)
-                                        setEstadoRegistrarBodegas(!EstadoRegistrarBodegas)
+                                        SetId(item.cedula)
+                                        setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
                                     }} type="submit">Actualizar</button>
-                                    <button className='Button-acciones' onClick={() => EliminarBodegas(item._id)} type="submit">Eliminar</button>
+                                    <button className='Button-acciones' onClick={() => EliminarUsuario(item._id)} type="submit">Eliminar</button>
                                 </div>
                             </div>
                         </div>
@@ -127,12 +196,12 @@ const MenuTercero = () => {
                 <div className='container-menu'>
                     <Banner DatosUsuario={DatosUsuario}></Banner>
                     <button onClick={() => {
-                        setEstadoRegistrarBodegas(!EstadoRegistrarBodegas)
+                        setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
                         SetId(undefined)
                     }} className='button-Agregar' type="submit"><p className='text-PANEL'>Agregar</p></button>
                 </div>
                 <div className='container-panel'>
-                    <Panel panel="Lista Bodegas"></Panel>
+                    <Panel panel="Lista facturas"></Panel>
                     <div className='container-info'>
                         <div className='container-busqueda'>
                             <div className='container-busqueda-input'>
@@ -144,28 +213,30 @@ const MenuTercero = () => {
                                     onClick={() => Vista()}
                                 >Buscar</button>
                             </div>
+                            <button className='Button-Filtro' type="submit" onClick={() => {
+                                setmostraradministrador(0)
+                                setmostrarbodegas(0)
+                                setmostrarventas(0)
+                                setMostraropciones(!Mostraropciones)
+                                Vista()
+                            }}>
+                                <FontAwesomeIcon icon={faFilter}>
+                                </FontAwesomeIcon>
+                            </button>
+                            {MostrarOpciones()}
                         </div>
                         <div className='container-listado'>
                             {MostrarInfo()}
                         </div>
                     </div>
                 </div>
-                {EstadoRegistrarBodegas &&
+                {EstadoRegistrarUsuario &&
                     <div className='container-Fondo'>
-                        <RegistrarBodegas Actualizar={Id}></RegistrarBodegas>
+                        <RegistrarUsuario Actualizar={Id}></RegistrarUsuario>
                         <button onClick={() => {
                             Vista()
-                            setEstadoRegistrarBodegas(!EstadoRegistrarBodegas)
-                        }} className='Button-Exit2' type="submit">X</button>
-                    </div>
-                }
-                {EstadoAgregarProductos &&
-                    <div className='container-Fondo'>
-                        <AgregarProductos Actualizar={Id}></AgregarProductos>
-                        <button onClick={() => {
-                            Vista()
-                            setEstadoAgregarProductos(!EstadoAgregarProductos)
-                        }} className='Button-Exit3' type="submit">X</button>
+                            setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
+                        }} className='Button-Exit' type="submit">X</button>
                     </div>
                 }
                 {EstadoAlertAccion &&

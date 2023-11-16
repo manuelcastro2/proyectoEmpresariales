@@ -5,7 +5,7 @@ import './../Estilos/InicioSesion.css'
 import './../Estilos/EstiloRegistroTercero.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRectangleList, faCircleRight } from '@fortawesome/free-regular-svg-icons'
-import PantallaCarga from './Menus/PantallaCarga';
+import PantallaCarga from './general/PantallaCarga';
 
 const endpoint = 'http://localhost:3333/usuarios'
 

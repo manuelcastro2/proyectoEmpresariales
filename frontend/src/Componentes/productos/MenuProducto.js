@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './../../Estilos/EstiloMenu.css'
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import RegistrarProducto from '../Modales/registerProducto';
-import Banner from './Banner'
-import Panel from './Barra'
-import AlertRequerimiento from './AlertRequerimiento';
-import PantallaCarga from './PantallaCarga';
-
+import RegistrarProducto from './registerProducto';
+import Banner from './../general/Banner'
+import Panel from './../general/Barra'
+import AlertRequerimiento from './../general/AlertRequerimiento';
+import PantallaCarga from './../general/PantallaCarga';
+import { ConsultarCodigoProducto, ConsultarProductos, EliminarProducto } from '../../apis/ApiProductos'
 //para invocar al backend en la parte de productos
-const endpoint = 'http://localhost:3333/productos'
+
 
 //funcion general
 const MenuTercero = () => {
@@ -51,8 +51,9 @@ const MenuTercero = () => {
     //funcion de consulta todo
     const MostrarTodo = async () => {
         setLoading(true)
-        await axios.get(`${endpoint}/`).then(datos => {
-            setDatosMostrar(datos.data.products)
+        const response = ConsultarProductos()
+        response.then(datos => {
+            setDatosMostrar(datos.products)
             setLoading(false)
         })
 
@@ -60,13 +61,16 @@ const MenuTercero = () => {
 
     //funcion de consulta especifica
     const MostrarBusqueda = async () => {
-        const response = await axios.post(`${endpoint}/codigoProducto`, { codigoProducto: busqueda })
-        setDatosMostrar(response.data.products)
+        const response = ConsultarCodigoProducto(busqueda)
+        response.then(response=>{
+            setDatosMostrar(response.products)
+        })
+        
     }
 
     //funcion de eliminar productos
     const EliminarProducto = async (id) => {
-        await axios.delete(`${endpoint}/${id}`)
+        const response =EliminarProducto(id)
         setDato("Producto")
         setAccion("elimino")
         Vista()

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './../../Estilos/EstiloVisualizar.css'
-import PantallaCarga from './../Menus/PantallaCarga';
-
-const endpoint = 'http://localhost:3333/bodegas/'
-const endpoint2 = 'http://localhost:3333/productos/'
+import PantallaCarga from './../general/PantallaCarga';
+import { ActualizarBodega, AgregarBodegas, ConsultarNombreBodega } from './../../apis/ApiBodegas'
+import { ConsultarProductos } from './../../apis/ApiProductos'
 
 const RegisterUsuario = ({ Actualizar }) => {
 
@@ -20,11 +19,12 @@ const RegisterUsuario = ({ Actualizar }) => {
 
     const Save = async (e) => {
         e.preventDefault();
-        const response = await axios.patch(endpoint, {
+        const producto = {
             _id: Id,
             productos: arreglo
-        })
-        if (response.data !== undefined) {
+        }
+        const response = ActualizarBodega(producto)
+        if (response !== undefined) {
             setAccion("agrego")
         }
         setEstadoAlertAccion(!EstadoAlertAccion)
@@ -44,22 +44,25 @@ const RegisterUsuario = ({ Actualizar }) => {
     }, [])
 
     const getIdBodega = async () => {
-        await axios.get(`${endpoint}${Actualizar}`).then(response => {
-            response.data.bodegas.forEach((item) => {
+        const response = ConsultarNombreBodega(Actualizar)
+
+        response.then(datos => {
+            datos.bodegas.forEach((item) => {
                 setId(item._id)
                 setProductos(item.productos);
+                setLoading(false)
             })
-            setLoading(false)
         })
 
     }
 
     const getAllProductos = async () => {
         setLoading2(true)
-        await axios.get(endpoint2).then(response => {
-            setTodosProductos(response.data.products)
+        const response = ConsultarProductos()
+        response.then(response => {
+            setTodosProductos(response.products)
+            setLoading2(false)
         })
-        setLoading2(false)
     }
 
     const MostrarModalAgregarProductos = () => {

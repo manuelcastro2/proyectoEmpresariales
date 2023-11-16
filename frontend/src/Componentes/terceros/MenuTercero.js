@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import './../../Estilos/EstiloMenu.css'
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import RegistrarTercero from '../Modales/registrarTercero'
+import RegistrarTercero from './registrarTercero'
 //importacion de iconos
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
-import Banner from './Banner'
-import Panel from './Barra'
-import AlertRequerimiento from './AlertRequerimiento';
-import PantallaCarga from './PantallaCarga';
+import Banner from '../general/Banner'
+import Panel from '../general/Barra'
+import AlertRequerimiento from '../general/AlertRequerimiento';
+import PantallaCarga from '../general/PantallaCarga';
+import { ConsultarTodosTerceros, ConsultarDocumentoTercero, ConsultarTipoTercero, EliminarTercero } from './../../apis/ApiTerceros'
 
 //para invocar al backend en la parte de productos
 const endpoint = 'http://localhost:3333/terceros'
@@ -65,35 +66,46 @@ const MenuTercero = () => {
     //funcion de consulta todo
     const MostrarTodo = async () => {
         setLoading(true)
-        await axios.get(`${endpoint}/`).then(datos => {
+        const Resultado = ConsultarTodosTerceros()
+        Resultado.then(datos => {
+            setDatosMostrar(datos.thirds)
             setLoading(false)
-            setDatosMostrar(datos.data.thirds)
         })
-
-
-
     }
 
     //funcion de consulta especifica
     const MostrarBusqueda = async () => {
-        const response = await axios.post(`${endpoint}/documento`, { documento: busqueda })
-        setDatosMostrar(response.data.thirds)
+        setLoading(true)
+        const Resultado = ConsultarDocumentoTercero(busqueda)
+        Resultado.then(datos => {
+            setDatosMostrar(datos.thirds)
+            console.log(DatosMostrar);
+            setLoading(false)
+        })
     }
 
     //funcion de consulta rol cliente
     const MostrarCliente = async () => {
-        const response = await axios.get(`${endpoint}/cliente`)
-        setDatosMostrar(response.data.thirds)
+        setLoading(true)
+        const Resultado = ConsultarTipoTercero("cliente")
+        Resultado.then(datos => {
+            setDatosMostrar(datos.thirds)
+            setLoading(false)
+        })
     }
 
     //funcion de consulta rol proveedor
     const MostrarProveedor = async () => {
-        const response = await axios.get(`${endpoint}/proveedor`)
-        setDatosMostrar(response.data.thirds)
+        setLoading(true)
+        const Resultado = ConsultarTipoTercero("proveedor")
+        Resultado.then(datos => {
+            setDatosMostrar(datos.thirds)
+            setLoading(false)
+        })
     }
     //funcion de eliminar tercero
-    const EliminarTercero = async (id) => {
-        await axios.delete(`${endpoint}/${id}`)
+    const EliminarTerceros = async (id) => {
+        const response = EliminarTercero(id)
         setDato("tercero")
         setAccion("elimino")
         setEstadoAlertAccion(!EstadoAlertAccion)
@@ -163,7 +175,7 @@ const MenuTercero = () => {
                                         SetId(item.documento)
                                         setEstadoRegistrarTercero(!EstadoRegistrarTercero)
                                     }} type="submit">Actualizar</button>
-                                    <button className='Button-acciones' onClick={() => EliminarTercero(item._id)} type="submit">Eliminar</button>
+                                    <button className='Button-acciones' onClick={() => EliminarTerceros(item._id)} type="submit">Eliminar</button>
                                 </div>
                             </div>
                         </div>

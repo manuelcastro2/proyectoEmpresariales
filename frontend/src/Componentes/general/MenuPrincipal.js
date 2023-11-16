@@ -32,37 +32,12 @@ const MenuPrincipal = () => {
     //funcion donde manejo el mostrado diferentes atravez de los roles
     function menuRol() {
         if (DatosUsuario && DatosUsuario.rol) {
-            if (DatosUsuario.rol == "bodega") {
-                //bototn donde me redireciono al menu de pedidos(ese falta crear)
-                return (
-                    <div>
-                        <div className='button-ESTANDAR'>
-                            <p className='text-PANEL'>pedidos</p>
-                        </div>
-                    </div>
-                )
-            } else if (DatosUsuario.rol == "ventas") {
-                //bototn donde me redireciono al menu de ventas(ese falta crear)
-                return (
-                    <div>
-                        <div className='button-ESTANDAR'>
-                            <p className='text-PANEL'>ventas</p>
-                        </div>
-                    </div>
-                )
-            } else {
+            if (DatosUsuario.rol == "administrador") {
                 //boton donde me redireciono al menu de usuario
                 //bototn donde me redireciono al menu de ventas(ese falta crear)
                 //bototn donde me redireciono al menu de pedidos(ese falta crear)
                 return (
                     <div>
-                        <button className='button-ESTANDAR'>
-                            <p className='text-PANEL'>Ventas</p>
-                        </button>
-                        <button className='button-ESTANDAR'>
-                            <p className='text-PANEL'>Pedidos</p>
-                        </button>
-
                         <button onClick={() => {
                             navigate('/menu/usuario',
                                 {
@@ -98,6 +73,22 @@ const MenuPrincipal = () => {
                 <div className='container-menu'>
                     <Banner DatosUsuario={DatosUsuario}>
                     </Banner>
+                    <button className='button-ESTANDAR' onClick={() => {
+                        navigate('/menu/factura',
+                            {
+                                state: {
+                                    DatosUsuario: {
+                                        nombre: DatosUsuario.nombre,
+                                        apellido: DatosUsuario.apellido,
+                                        rol: DatosUsuario.rol,
+                                        id: DatosUsuario.id
+                                    }
+                                }
+                            }
+                        )
+                    }}>
+                        <p className='text-PANEL' >Facturas</p>
+                    </button>
                     {menuRol()}
                     <button onClick={() => {
                         navigate('/menu/bodega',
@@ -160,6 +151,7 @@ const MenuPrincipal = () => {
         )
     }
 }
+
 
 
 export default MenuPrincipal

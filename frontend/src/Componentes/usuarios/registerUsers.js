@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ConsultarDocumentoUsuarios, AgregarUsuarios, ActualizarUsuarios } from './../../apis/ApiUsuarios'
 
-const endpoint = 'http://localhost:3333/usuarios'
 
 const RegisterUsuario = ({ Actualizar }) => {
 
@@ -16,14 +16,15 @@ const RegisterUsuario = ({ Actualizar }) => {
 
     const Save = async (e) => {
         e.preventDefault();
+        const usuario = {
+            nombre: nombre,
+            apellido: apellido,
+            cedula: cedula,
+            rol: rol,
+            clave: clave
+        }
         if (Actualizar === undefined) {
-            const response = await axios.post(endpoint, {
-                nombre: nombre,
-                apellido: apellido,
-                cedula: cedula,
-                rol: rol,
-                clave: clave
-            })
+            const response = AgregarUsuarios(usuario)
             if (response.data !== undefined) {
                 setAccion("guardo")
                 setNombre("")
@@ -33,14 +34,7 @@ const RegisterUsuario = ({ Actualizar }) => {
                 setClave("")
             }
         } else {
-            const response = await axios.patch(`${endpoint}/`, {
-                id:Id,
-                nombre: nombre,
-                apellido: apellido,
-                cedula: cedula,
-                rol: rol,
-                clave: clave
-            })
+            const response = ActualizarUsuarios(usuario)
             if (response.data !== undefined) {
                 setNombre("")
                 setCedula("")
@@ -56,15 +50,15 @@ const RegisterUsuario = ({ Actualizar }) => {
     useEffect(() => {
         if (Actualizar != undefined) {
             const getIdUsuario = async () => {
-                const response = await axios.post(`${endpoint}/documento`, { cedula: Actualizar })
-                    response.data.users.forEach((item) => {
-                        setId(item.id)
-                        setNombre(item.nombre)
-                        setCedula(item.cedula)
-                        setApellido(item.apellido)
-                        setRol(item.rol)
-                        setClave(item.clave)
-                    })
+                const Resultado = ConsultarDocumentoUsuarios(Actualizar)
+                Resultado.data.users.forEach((item) => {
+                    setId(item.id)
+                    setNombre(item.nombre)
+                    setCedula(item.cedula)
+                    setApellido(item.apellido)
+                    setRol(item.rol)
+                    setClave(item.clave)
+                })
             }
             getIdUsuario()
         }

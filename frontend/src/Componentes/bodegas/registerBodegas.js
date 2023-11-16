@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const endpoint = 'http://localhost:3333/bodegas/'
+import { AgregarBodegas, ActualizarBodega, ConsultarNombreBodega } from './../../apis/ApiBodegas'
 
 const RegisterUsuario = ({ Actualizar }) => {
 
@@ -13,23 +12,26 @@ const RegisterUsuario = ({ Actualizar }) => {
 
     const Save = async (e) => {
         e.preventDefault();
+        const Bodegas = {
+            nombre: nombre,
+            direccion: direccion
+        }
+
+        const BodegaActualizar = {
+            id: Id,
+            nombre: nombre,
+            direccion: direccion
+        }
         if (Actualizar === undefined) {
-            const response = await axios.post(endpoint, {
-                nombre: nombre,
-                direccion: direccion
-            })
-            if (response.data !== undefined) {
+            const response = AgregarBodegas(Bodegas)
+            if (response !== undefined) {
                 setAccion("guardo")
                 setNombre("")
                 setDireccion("")
             }
         } else {
-            const response = await axios.patch(endpoint, {
-                _id:Id,
-                nombre: nombre,
-                direccion: direccion
-            })
-            if (response.data !== undefined) {
+            const response = ActualizarBodega(BodegaActualizar)
+            if (response !== undefined) {
                 setNombre("")
                 setDireccion("")
                 setAccion("actualizo")
@@ -42,11 +44,12 @@ const RegisterUsuario = ({ Actualizar }) => {
         if (Actualizar != undefined) {
             console.log(Actualizar);
             const getIdBodega = async () => {
-                await axios.get(`${endpoint}${Actualizar}`).then(response => {
-                    response.data.bodegas.forEach((item) => {
-                        setId(item._id)
-                        setNombre(item.nombre)
-                        setDireccion(item.direccion)
+                const response = ConsultarNombreBodega(Actualizar)
+                response.then((item) => {
+                    item.bodegas.forEach(dato => {
+                        setId(dato._id)
+                        setNombre(dato.nombre)
+                        setDireccion(dato.direccion)
                     })
                 })
 
@@ -79,7 +82,7 @@ const RegisterUsuario = ({ Actualizar }) => {
                             id='Direccion'
                             value={direccion}
                             onChange={(e) => setDireccion(e.target.value)} />
-                        <label className='label-tercero' for="">Apellido</label>
+                        <label className='label-tercero' for="">Direccion</label>
                     </div>
                     <div className='container-Input'>
                         <button className='Button-Entrar' type="submit">Enviar</button>
