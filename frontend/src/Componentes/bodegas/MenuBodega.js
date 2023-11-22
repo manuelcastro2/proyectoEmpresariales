@@ -3,13 +3,13 @@ import './../../Estilos/EstiloMenu.css'
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import RegistrarBodegas from './registerBodegas'
-import AgregarProductos from './agregarProductosBodegas'
+import AgregarProductos from './VerProductosBodegas'
 //importacion de iconos
 import Banner from './../general/Banner'
 import Panel from './../general/Barra'
 import AlertRequerimiento from './../general/AlertRequerimiento';
 import PantallaCarga from './../general/PantallaCarga';
-import {ConsultarBodegas,EliminarBodega,ConsultarNombreBodega}from './../../apis/ApiBodegas'
+import { ConsultarBodegas, EliminarBodega, ConsultarNombreBodega } from './../../apis/ApiBodegas'
 
 //para invocar al backend en la parte de usuarios
 const MenuTercero = () => {
@@ -50,7 +50,7 @@ const MenuTercero = () => {
 
     const MostrarTodo = async () => {
         setLoading(true)
-        const Response=ConsultarBodegas()
+        const Response = ConsultarBodegas()
         Response.then(datos => {
             setDatosMostrar(datos.bodegas)
             setLoading(false)
@@ -104,11 +104,19 @@ const MenuTercero = () => {
                                         SetId(item.nombre)
                                         setEstadoAgregarProductos(!EstadoAgregarProductos)
                                     }} type="submit">Productos</button>
-                                    <button className='Button-acciones' onClick={() => {
-                                        SetId(item.nombre)
-                                        setEstadoRegistrarBodegas(!EstadoRegistrarBodegas)
-                                    }} type="submit">Actualizar</button>
-                                    <button className='Button-acciones' onClick={() => EliminarBodegas(item._id)} type="submit">Eliminar</button>
+                                    {DatosUsuario.rol != "ventas" ? (
+                                        <div>
+                                            <button className='Button-acciones' onClick={() => {
+                                                SetId(item.nombre)
+                                                setEstadoRegistrarBodegas(!EstadoRegistrarBodegas)
+                                            }} type="submit">Actualizar</button>
+                                            <button className='Button-acciones' onClick={() => EliminarBodegas(item._id)} type="submit">Eliminar</button>
+                                        </div>
+                                    ) : (
+                                        <div>
+
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -129,10 +137,16 @@ const MenuTercero = () => {
             <div className='container-principal'>
                 <div className='container-menu'>
                     <Banner DatosUsuario={DatosUsuario}></Banner>
-                    <button onClick={() => {
-                        setEstadoRegistrarBodegas(!EstadoRegistrarBodegas)
-                        SetId(undefined)
-                    }} className='button-Agregar' type="submit"><p className='text-PANEL'>Agregar</p></button>
+                    {DatosUsuario.rol != "ventas" ? (
+                        <button onClick={() => {
+                            setEstadoRegistrarBodegas(!EstadoRegistrarBodegas)
+                            SetId(undefined)
+                        }} className='button-Agregar' type="submit"><p className='text-PANEL'>Agregar</p></button>
+                    ) : (
+                        <div>
+
+                        </div>
+                    )}
                 </div>
                 <div className='container-panel'>
                     <Panel panel="Lista Bodegas"></Panel>

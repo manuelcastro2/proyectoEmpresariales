@@ -5,6 +5,7 @@ import './../Estilos/InicioSesion.css'
 import './../Estilos/EstiloRegistroTercero.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRectangleList, faCircleRight } from '@fortawesome/free-regular-svg-icons'
+import { InicioUsuarios } from './../apis/ApiUsuarios'
 import PantallaCarga from './general/PantallaCarga';
 
 const endpoint = 'http://localhost:3333/usuarios'
@@ -14,32 +15,37 @@ function SingUp() {
     const [cedula, setCedula] = useState('')
     const [clave, setClave] = useState('')
     const [loading, setLoading] = useState(false)
+    const [Falta, setFalta] = useState(false)
     const [FalloSesion, setFalloSesion] = useState(false)
 
     const navigate = useNavigate()
 
-    const Datos = async () => {
+    const Datos = () => {
         if (cedula != '' && clave != '') {
             setLoading(true)
-            console.log(clave);
-            console.log(cedula);
-            await axios.get(`${endpoint}/inicio/${cedula}/${clave}`).then(datos => {
-                setLoading(false)
-                datos.data.users.forEach((item) => {
-                    navigate('/menu', {
-                        state: {
-                            DatosUsuario: {
-                                nombre: item.nombre,
-                                apellido: item.apellido,
-                                rol: item.rol,
-                                id: item._id
+            InicioUsuarios(cedula, clave).then(datos => {
+                console.log(datos.users.length);
+                if (!datos.users.length) {
+                    setLoading(false)
+                    setFalloSesion(true)
+                } else {
+                    setLoading(false)
+                    datos.users.forEach((item) => {
+                        navigate('/menu', {
+                            state: {
+                                DatosUsuario: {
+                                    nombre: item.nombre,
+                                    apellido: item.apellido,
+                                    rol: item.rol,
+                                    id: item._id
+                                }
                             }
-                        }
+                        })
                     })
-                })
+                }
             })
         } else {
-            setFalloSesion(true)
+            setFalta(true)
         }
     }
 
@@ -97,12 +103,26 @@ function SingUp() {
                         </button>
                     </div>
                 </form>
+                {Falta &&
+                    <div className='container-Fondo'>
+                        <div className='Container-Alert'>
+                            <div className='Container-Alert-interno'>
+                                <p className='Text-Alert'>
+                                    <p>falta clave o usuarios</p>
+                                    <button className='button-Alert' type="submit" onClick={() => {
+                                        setFalta(false)
+                                    }}>Cerrar</button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
                 {FalloSesion &&
                     <div className='container-Fondo'>
                         <div className='Container-Alert'>
                             <div className='Container-Alert-interno'>
                                 <p className='Text-Alert'>
-                                    <p>Sesion no iniciada, clave o usuario incorrectos</p>
+                                    <p>sesion fallida, cedula o clave incorrecto</p>
                                     <button className='button-Alert' type="submit" onClick={() => {
                                         setFalloSesion(false)
                                     }}>Cerrar</button>

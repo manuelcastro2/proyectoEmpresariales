@@ -138,8 +138,21 @@ const MenuPrincipal = () => {
                     }} className='button-ESTANDAR'>
                         <p className='text-PANEL'>Terceros</p>
                     </button>
-                    <button className='button-ESTANDAR'>
-                        <p className='text-PANEL'>Informes</p>
+                    <button className='button-ESTANDAR' onClick={() => {
+                        navigate('/menu/informes',
+                            {
+                                state: {
+                                    DatosUsuario: {
+                                        nombre: DatosUsuario.nombre,
+                                        apellido: DatosUsuario.apellido,
+                                        rol: DatosUsuario.rol,
+                                        id: DatosUsuario.id
+                                    }
+                                }
+                            }
+                        )
+                    }}>
+                        <p className='text-PANEL' >Informes</p>
                     </button>
                 </div>
                 <div className='container-panel'>

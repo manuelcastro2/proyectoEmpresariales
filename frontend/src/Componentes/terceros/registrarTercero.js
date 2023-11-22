@@ -39,7 +39,7 @@ function RegistrarTercero({ Actualizar }) {
             }
         } else {
             const response = ActualizarTercero(tercero)
-            if (response!== undefined) {
+            if (response !== undefined) {
                 setCedula("")
                 setDireccion("")
                 setName("")
@@ -83,12 +83,13 @@ function RegistrarTercero({ Actualizar }) {
             <form onSubmit={Enviar}>
                 <div className='container-interno-Tercero field'>
                     <div className='container-Input'>
-                        <input className='Input-text' type="text"
-                            name="tipotercero"
-                            placeholder='Tipotercero'
-                            id='tipotercero'
+                        <select className='Input-text'
                             value={tipoTercero}
-                            onChange={(e) => setTipoTercero(e.target.value)} />
+                            onChange={(e) => setTipoTercero(e.target.value)} >
+                            <option value="">Seleccione una opcion</option>
+                            <option value="cliente">Cliente</option>
+                            <option value="proveedor">Proveedor</option>
+                        </select>
                         <label className='label-tercero' for="">Tipo tercero</label>
                     </div>
                     <div className='container-Input'>
@@ -101,12 +102,15 @@ function RegistrarTercero({ Actualizar }) {
                         <label className='label-tercero' for="">Nombre</label>
                     </div>
                     <div className='container-Input'>
-                        <input className='Input-text' type="text"
-                            name="tipoDoc"
-                            placeholder='Tipo documento'
-                            id='tipoDoc'
+                        <select className='Input-text'
                             value={tipoDoc}
-                            onChange={(e) => setTipoDoc(e.target.value)} />
+                            onChange={(e) => setTipoDoc(e.target.value)} >
+                            <option value="">Seleccione una opcion</option>
+                            <option value="cedula">Cedula</option>
+                            <option value="nit">Nit</option>
+                            <option value="cedula extranjera">Cedula Extranjera</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
                         <label className='label-tercero' for="">Tipo documento</label>
                     </div>
                     <div className='container-Input'>

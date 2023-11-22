@@ -23,7 +23,10 @@ productosRouter.post('/', (req, res) => {
 productosRouter.patch('/', (req, res) => {
     const producto = req.body
     productos.updateOne({ codigoProducto: producto.codigoProducto }, producto)
-        .then(datos => res.json({ products: datos })).catch(error => res.json({ mensaje: error }))
+        .then(datos => res.json({ products: datos })).catch(error => {
+            res.json({ mensaje: error })
+            console.log(error);
+        })
 })
 
 //promesa de eliminar productos

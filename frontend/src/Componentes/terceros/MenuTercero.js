@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './../../Estilos/EstiloMenu.css'
-import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import RegistrarTercero from './registrarTercero'
-//importacion de iconos
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import Banner from '../general/Banner'
@@ -12,15 +11,8 @@ import AlertRequerimiento from '../general/AlertRequerimiento';
 import PantallaCarga from '../general/PantallaCarga';
 import { ConsultarTodosTerceros, ConsultarDocumentoTercero, ConsultarTipoTercero, EliminarTercero } from './../../apis/ApiTerceros'
 
-//para invocar al backend en la parte de productos
-const endpoint = 'http://localhost:3333/terceros'
-
-//funcion general
 const MenuTercero = () => {
 
-    //metodo state y de estados de los datos del usuario del inicio de sesion
-    //y los estados de mostrar y consultas y de los alert de que se guardo y elimino correctamente
-    //y las diferentes acciones que se hacen en el menu
     const { state } = useLocation();
     const [DatosUsuario, setDatosUsuario] = useState("")
     const [DatosMostrar, setDatosMostrar] = useState([])
@@ -36,7 +28,6 @@ const MenuTercero = () => {
     const [loading, setLoading] = useState(false)
     const [Id, SetId] = useState(undefined)
 
-    //validadcion de datos
     useEffect(() => {
         if (state && state.DatosUsuario) {
             setDatosUsuario(state.DatosUsuario);
@@ -46,7 +37,6 @@ const MenuTercero = () => {
         }
     }, []);
 
-    //funcion de mostrar si es general o especifico
     const Vista = () => {
         if (Mostrarcientes === 1) {
             MostrarCliente()
@@ -63,7 +53,6 @@ const MenuTercero = () => {
         }
     }
 
-    //funcion de consulta todo
     const MostrarTodo = async () => {
         setLoading(true)
         const Resultado = ConsultarTodosTerceros()
@@ -73,7 +62,6 @@ const MenuTercero = () => {
         })
     }
 
-    //funcion de consulta especifica
     const MostrarBusqueda = async () => {
         setLoading(true)
         const Resultado = ConsultarDocumentoTercero(busqueda)
@@ -84,7 +72,6 @@ const MenuTercero = () => {
         })
     }
 
-    //funcion de consulta rol cliente
     const MostrarCliente = async () => {
         setLoading(true)
         const Resultado = ConsultarTipoTercero("cliente")
@@ -94,7 +81,6 @@ const MenuTercero = () => {
         })
     }
 
-    //funcion de consulta rol proveedor
     const MostrarProveedor = async () => {
         setLoading(true)
         const Resultado = ConsultarTipoTercero("proveedor")
@@ -103,7 +89,7 @@ const MenuTercero = () => {
             setLoading(false)
         })
     }
-    //funcion de eliminar tercero
+    
     const EliminarTerceros = async (id) => {
         const response = EliminarTercero(id)
         setDato("tercero")
@@ -112,7 +98,6 @@ const MenuTercero = () => {
         Vista()
     }
 
-    //funcion de mostrar y poder interatuar  con las funciones de consultas clientes y proveedores
     const MostrarOpciones = () => {
         if (Mostraropciones) {
             return (

@@ -2,31 +2,22 @@ import React, { useState, useEffect } from 'react';
 import './../../Estilos/EstiloMenu.css'
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import RegistrarUsuario from '../usuarios/registerUsers'
-//importacion de iconos
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFilter } from '@fortawesome/free-solid-svg-icons'
-import Banner from '../general/Banner'
-import Panel from '../general/Barra'
-import AlertRequerimiento from '../general/AlertRequerimiento';
-import PantallaCarga from '../general/PantallaCarga';
+import { GenerarPdf } from './../general/GenerarFacturas'
+import Banner from './../general/Banner'
+import Panel from './../general/Barra'
+import AlertRequerimiento from './../general/AlertRequerimiento';
+import PantallaCarga from './../general/PantallaCarga';
+import RegisterFactura from './registerFacturas'
+import { ConsultarFacturas, ConsultarCodigoFacturas, EliminarFactura } from '../../apis/ApiFactura'
 
-//para invocar al backend en la parte de usuarios
-const endpoint = 'http://localhost:3333/usuarios'
 const MenuTercero = () => {
 
-    //metodo state y de estados de los datos del usuario del inicio de sesion
-    //y los estados de mostrar y consultas y de los alert de que se guardo y elimino correctamente
-    //y las diferentes acciones que se hacen en el menu
     const { state } = useLocation();
     const [DatosUsuario, setDatosUsuario] = useState("")
     const [DatosMostrar, setDatosMostrar] = useState([])
     const [EstadoRegistrarUsuario, setEstadoRegistrarUsuario] = useState(false)
-    const [Mostraropciones, setMostraropciones] = useState(false)
+    const [Tercero, setTercero] = useState('')
     const [busqueda, setbusqueda] = useState("")
-    const [Mostraradministrador, setmostraradministrador] = useState(0)
-    const [Mostrarventas, setmostrarventas] = useState(0)
-    const [Mostrarbodegas, setmostrarbodegas] = useState(0)
     const [EstadoSesion, SetEstadoSesion] = useState(false)
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -45,98 +36,30 @@ const MenuTercero = () => {
     }, []);
 
     const Vista = () => {
-        if (Mostraradministrador == 1) {
-            MostrarAdministrador()
-        }
-
-        if (Mostrarbodegas == 2) {
-            MostrarBodegas()
-        }
-
-        if (Mostrarventas == 3) {
-            MostrarVentas()
+        if (busqueda.trim() != "") {
         } else {
-            if (busqueda.trim() != "") {
-                MostrarBusqueda()
-            } else {
-                MostrarTodo()
-            }
+            MostrarTodo()
         }
+
     }
 
     const MostrarTodo = async () => {
         setLoading(true)
-        await axios.get(`${endpoint}/`).then(datos => {
-            setDatosMostrar(datos.data.users)
+        const response = ConsultarFacturas()
+        response.then(datos => {
+            setDatosMostrar(datos.facturas)
             setLoading(false)
         })
 
 
     }
 
-    const MostrarBusqueda = async () => {
-        const response = await axios.post(`${endpoint}/documento`, { cedula: busqueda })
-        setDatosMostrar(response.data.users)
-    }
-
-    const MostrarAdministrador = async () => {
-        const response = await axios.get(`${endpoint}/administrador`)
-        setDatosMostrar(response.data.users)
-    }
-
-    const MostrarVentas = async () => {
-        const response = await axios.get(`${endpoint}/ventas`)
-        setDatosMostrar(response.data.users)
-    }
-
-    const MostrarBodegas = async () => {
-        const response = await axios.get(`${endpoint}/bodegas`)
-        setDatosMostrar(response.data.users)
-    }
-
-    const MostrarOpciones = () => {
-        if (Mostraropciones) {
-            return (
-                <div className='caja-opciones'>
-                    <button className='button-opciones-cliente' id='boton-cliente' value="administrador" type="submit"
-                        onClick={() => {
-                            setmostraradministrador(1)
-                            Vista()
-                        }} >Administrador
-                    </button>
-                    <div className='division'>
-                    </div>
-                    <button className='button-opciones-proveedor' id="boton-proveedor" value="bodegas" type="submit"
-                        onClick={() => {
-                            setmostrarbodegas(2)
-                            Vista()
-                        }}>Bodegas
-                    </button>
-                    <div className='division'>
-                    </div>
-                    <button className='button-opciones-proveedor' id="boton-proveedor" value="ventas" type="submit"
-                        onClick={() => {
-                            setmostrarventas(3)
-                            Vista()
-                        }}>Ventas
-                    </button>
-                </div>
-            )
-        }
-    }
-
-    const EliminarUsuario = async (id) => {
-        if (DatosUsuario.id != id) {
-            await axios.delete(`${endpoint}/${id}`)
-            setDato("al usuario")
-            setAccion("Se elimino")
-            Vista()
-            setEstadoAlertAccion(!EstadoAlertAccion)
-        } else {
-            setDato("al usuario")
-            setAccion("No se peude eliminar")
-            setEstadoAlertAccion(!EstadoAlertAccion)
-        }
+    const EliminarFacturas = async (id) => {
+        const response = EliminarFactura(id)
+        setDato("la factura")
+        setAccion("Se elimino")
+        Vista()
+        setEstadoAlertAccion(!EstadoAlertAccion)
     }
 
     const MostrarInfo = () => {
@@ -153,28 +76,57 @@ const MenuTercero = () => {
                         <div className='caja-vista'>
                             <div className='caja-vista-principal'>
                                 <div className='caja-principal'>
-                                    {item.rol}
+                                    {item.nroFactura}
                                 </div>
                                 <div className='caja-nombre'>
-                                    {item.nombre}
+                                    {item.tipoFactura}
                                 </div>
                             </div>
                             <div className='caja-Datos' id="aumentar">
                                 <div className='text-Mostrar'>
-                                    Apellido: {item.apellido}
+                                    Tercero: {item.tercero.nombre}
                                 </div>
                                 <div className='text-Mostrar'>
-                                    Documento: {item.cedula}
+                                    Tipo tercero: {item.tercero.tipoTercero}
                                 </div>
                                 <div className='text-Mostrar'>
-                                    Clave:<input className='password' type="password" value={item.clave} disabled />
+                                    Fecha: {item.fecha}
                                 </div>
                                 <div className='text-Mostrar'>
-                                    <button className='Button-acciones' onClick={() => {
-                                        SetId(item.cedula)
-                                        setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
-                                    }} type="submit">Actualizar</button>
-                                    <button className='Button-acciones' onClick={() => EliminarUsuario(item._id)} type="submit">Eliminar</button>
+                                    ValorTotal: {item.totalOperacion}
+                                </div>
+                                <div className='text-Mostrar'>
+                                    <button className='Button-acciones'
+                                        type="submit"
+                                        onClick={() => {
+                                            GenerarPdf({
+                                                nroFactura: item.nroFactura,
+                                                tipofactura: item.tipoFactura,
+                                                nombreCliente: item.tercero.nombre,
+                                                documento: item.tercero.documento,
+                                                bodegaNombre: item.bodega.nombre,
+                                                direccionBodega: item.bodega.direccion,
+                                                fecha: item.fecha,
+                                                elementos: item.elementos,
+                                                valor: item.totalOperacion
+                                            })
+                                        }}
+                                    >Ver factura</button>
+                                    {DatosUsuario.rol == "administrador" ? (
+                                        <div>
+                                            <button className='Button-acciones' onClick={() => {
+                                                SetId(item.nroFactura)
+                                                setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
+                                            }} type="submit">Actualizar</button>
+                                            <button className='Button-acciones' onClick={() => EliminarFacturas(item._id)} type="submit">Eliminar</button>
+                                        </div>
+                                    ) : (
+                                        <div>
+
+                                        </div>
+                                    )}
+
+
                                 </div>
                             </div>
                         </div>
@@ -201,7 +153,7 @@ const MenuTercero = () => {
                     }} className='button-Agregar' type="submit"><p className='text-PANEL'>Agregar</p></button>
                 </div>
                 <div className='container-panel'>
-                    <Panel panel="Lista facturas"></Panel>
+                    <Panel panel="Lista facturas venta"></Panel>
                     <div className='container-info'>
                         <div className='container-busqueda'>
                             <div className='container-busqueda-input'>
@@ -213,17 +165,6 @@ const MenuTercero = () => {
                                     onClick={() => Vista()}
                                 >Buscar</button>
                             </div>
-                            <button className='Button-Filtro' type="submit" onClick={() => {
-                                setmostraradministrador(0)
-                                setmostrarbodegas(0)
-                                setmostrarventas(0)
-                                setMostraropciones(!Mostraropciones)
-                                Vista()
-                            }}>
-                                <FontAwesomeIcon icon={faFilter}>
-                                </FontAwesomeIcon>
-                            </button>
-                            {MostrarOpciones()}
                         </div>
                         <div className='container-listado'>
                             {MostrarInfo()}
@@ -232,7 +173,7 @@ const MenuTercero = () => {
                 </div>
                 {EstadoRegistrarUsuario &&
                     <div className='container-Fondo'>
-                        <RegistrarUsuario Actualizar={Id}></RegistrarUsuario>
+                        <RegisterFactura Datos={DatosUsuario} ></RegisterFactura>
                         <button onClick={() => {
                             Vista()
                             setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)

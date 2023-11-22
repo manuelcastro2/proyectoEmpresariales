@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './../../Estilos/EstiloVisualizar.css'
-import PantallaCarga from './../general/PantallaCarga';
-import { ActualizarBodega, AgregarBodegas, ConsultarNombreBodega } from './../../apis/ApiBodegas'
-import { ConsultarProductos } from './../../apis/ApiProductos'
+import PantallaCarga from '../general/PantallaCarga';
+import { ActualizarBodega, AgregarBodegas, ConsultarNombreBodega } from '../../apis/ApiBodegas'
+import { ConsultarProductos } from '../../apis/ApiProductos'
 
 const RegisterUsuario = ({ Actualizar }) => {
 
@@ -11,7 +11,6 @@ const RegisterUsuario = ({ Actualizar }) => {
     const [productos, setProductos] = useState([])
     const [Accion, setAccion] = useState("")
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
-    const [EstadoAlertAgregarProducto, setEstadoAlertAgregarProducto] = useState(false)
     const [loading, setLoading] = useState(false)
     const [loading2, setLoading2] = useState(false)
     const [TodosProductos, setTodosProductos] = useState([])
@@ -65,78 +64,6 @@ const RegisterUsuario = ({ Actualizar }) => {
         })
     }
 
-    const MostrarModalAgregarProductos = () => {
-        return (
-            <div>
-                {loading2 ? (
-                    <div className='container-Fondo'>
-                        <div className='container-RegistroTercero3'>
-                            <PantallaCarga></PantallaCarga>
-                        </div>
-                    </div>
-                ) : (
-                    <div className='container-Fondo'>
-                        <div className='container-RegistroTercero3'>
-                            <button type="submit"
-                                className='Button-Exit3'
-                                onClick={() => {
-                                    getIdBodega()
-                                    setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)
-                                }}>X</button>
-                            <h1 id='titulo-producto'>
-                                Agregar productos
-                            </h1>
-                            <div className='container-informacion2'>
-                                {TodosProductos.map((item) => (
-                                    <div className='container-productos'>
-                                        <div className='caja-producto'>
-                                            <div className='container-codigo'>
-                                                {item.codigoProducto}
-                                            </div>
-                                            <div className='container-nombre'>
-                                                {item.nombre}
-                                            </div>
-                                        </div>
-                                        <div className='caja-contenido'>
-                                            <div className='caja-elemento'>
-                                                Tipo: {item.tipoProducto}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                Unidad medida:{item.unidadMedida}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                Valor unitario{item.valorUnitario}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                Existencias: {item.existencias}
-                                            </div>
-                                            <div className='caja-elemento'>
-                                                <label for=""><input type="checkbox" onChange={() => {
-                                                    arreglo.push({
-                                                        codigo: item.codigoProducto,
-                                                        nombre: item.nombre,
-                                                        tipoProducto: item.tipoProducto,
-                                                        unidadMedida: item.unidadMedida,
-                                                        valorUnitario: item.valorUnitario,
-                                                        Existencias: item.existencias,
-                                                        PorcentajeIva: item.porcentaje
-                                                    })
-                                                }} />Agregar</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <button className='Button-acciones'
-                                type="submit"
-                                onClick={Save}
-                            >Agregar</button>
-                        </div>
-                    </div>
-                )}
-            </div>
-        )
-    }
 
     return (
         <div>
@@ -153,12 +80,6 @@ const RegisterUsuario = ({ Actualizar }) => {
                     </h1>
                     <div className='container-button-agregar'>
                         <button type="submit" className='button-agregar'>Traslado</button>
-                        <button type="submit"
-                            className='button-agregar'
-                            onClick={() => {
-                                setEstadoAlertAgregarProducto(!EstadoAlertAgregarProducto)
-                                getAllProductos()
-                            }}>Agregar</button>
                     </div>
                     <div className='container-informacion'>
                         <table className='container-tabla'>
@@ -197,10 +118,10 @@ const RegisterUsuario = ({ Actualizar }) => {
                                         {item.valorUnitario}
                                     </td>
                                     <td>
-                                        {item.Existencias}
+                                        {item.existencias}
                                     </td>
                                     <td>
-                                        {item.PorcentajeIva}
+                                        {item.porcentaje}
                                     </td>
                                 </tr>
                             ))}
@@ -208,9 +129,6 @@ const RegisterUsuario = ({ Actualizar }) => {
                     </div>
                 </div>
             )}
-            {EstadoAlertAgregarProducto &&
-                MostrarModalAgregarProductos()
-            }
             {EstadoAlertAccion &&
                 <div className='container-Fondo'>
                     <div className='Container-Alert'>

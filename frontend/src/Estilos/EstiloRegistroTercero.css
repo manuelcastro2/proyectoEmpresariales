@@ -37,6 +37,19 @@
     border-radius: 5px;
 }
 
+.container-RegistroTercero4 {
+    width: 700px;
+    height: 500px;
+    background-color: #ffff;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    border-radius: 5px;
+}
+
 .container-interno-Tercero {
     width: 600px;
     height: 350px;
@@ -62,6 +75,15 @@
     gap: 40px;
     align-items: center;
     flex-direction: column;
+}
+
+.container-interno-Tercero4 {
+    width: 600px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    flex-wrap: wrap;
 }
 
 .container-Input {

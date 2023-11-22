@@ -104,6 +104,171 @@ th {
     margin-bottom: 10px;
 }
 
-.password{
+.password {
     margin-left: 5px;
+}
+
+.container-elementos {
+    width: 100%;
+    height: 120px;
+    max-width: 800px;
+    display: flex;
+    justify-content: baseline;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-agregar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+}
+
+.listaProductos {
+    width: 80%;
+    gap: 10px;
+    border: 1px solid black;
+    display: flex;
+    padding-left: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.caja-lista {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 30px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.Input-texto {
+    font-family: inherit;
+    width: 11%;
+    border: none;
+    border-bottom: 2px solid #1b1b1b;
+    outline: 0;
+    font-size: 17px;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+
+.container-vista-producto {
+    width: 100%;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.vista-producto {
+    width: 90%;
+    display: flex;
+    text-align: justify;
+}
+
+.caja-elemento1 {
+    padding-left: 10px;
+    min-width: 38%;
+    background-color: #72A1C0;
+}
+
+.caja-elemento2 {
+    padding-left: 10px;
+    min-width: 15%;
+    background-color: #72A1C0;
+}
+
+.caja-elemento3 {
+    padding-left: 10px;
+    min-width: 5%;
+    background-color: #72A1C0;
+}
+
+.caja-elemento4 {
+    padding-left: 10px;
+    min-width: 15%;
+    background-color: #72A1C0;
+}
+
+.container-rango {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container-fechas {
+    width: 30%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.container-informe {
+    width: 70%;
+    height: auto;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.tabla-informe {
+    font-weight: 600;
+    border: 1px solid black;
+    background-color: #ffff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 95%;
+    height: 115%;
+    position: relative;
+    top: 50px;
+}
+
+.container-input-fechas {
+    position: relative;
+    padding: 20px 0 0;
+    width: 100%;
+    max-width: 500px;
+    left: 10px;
+}
+
+.td-informe {
+    background-color: #72A1C0;
+    width: 180px;
+    height: 35px;
+}
+
+.td-valor {
+    width: 180px;
+    height: 35px;
+}
+
+
+.thead-informe {
+    width: 100%;
+}
+
+.container-informe-agregar {
+    min-width: 100%;
+    height: 80%;
+    overflow-y: hidden;
+}
+
+.caja-button-agregar {
+    height: 50px;
+    width: auto;
 }

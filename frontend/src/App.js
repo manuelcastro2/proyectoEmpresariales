@@ -7,6 +7,7 @@ import MenuUsuario from './Componentes/usuarios/MenuUsuario'
 import MenuProducto from './Componentes/productos/MenuProducto'
 import MenuBodega from './Componentes/bodegas/MenuBodega'
 import MenuFactura from './Componentes/facturas/MenuFactura'
+import MenuInformes from './Componentes/informes/MenuInformes'
 
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='/menu/producto' element={<MenuProducto />}></Route>
           <Route path='/menu/bodega' element={<MenuBodega />}></Route>
           <Route path='/menu/factura' element={<MenuFactura />}></Route>
+          <Route path='/menu/informes' element={<MenuInformes />}></Route>
         </Routes>
       </BrowserRouter>
 

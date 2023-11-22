@@ -50,15 +50,17 @@ const RegisterUsuario = ({ Actualizar }) => {
     useEffect(() => {
         if (Actualizar != undefined) {
             const getIdUsuario = async () => {
-                const Resultado = ConsultarDocumentoUsuarios(Actualizar)
-                Resultado.data.users.forEach((item) => {
-                    setId(item.id)
-                    setNombre(item.nombre)
-                    setCedula(item.cedula)
-                    setApellido(item.apellido)
-                    setRol(item.rol)
-                    setClave(item.clave)
+                ConsultarDocumentoUsuarios(Actualizar).then((datos) => {
+                    datos.users.forEach((item) => {
+                        setId(item.id)
+                        setNombre(item.nombre)
+                        setCedula(item.cedula)
+                        setApellido(item.apellido)
+                        setRol(item.rol)
+                        setClave(item.clave)
+                    })
                 })
+
             }
             getIdUsuario()
         }
@@ -100,12 +102,14 @@ const RegisterUsuario = ({ Actualizar }) => {
                         <label className='label-tercero' for="">Cedula</label>
                     </div>
                     <div className='container-Input'>
-                        <input className='Input-text' type="text"
-                            name="Rol"
-                            placeholder='Rol'
-                            id='rol'
+                        <select className='Input-text'
                             value={rol}
-                            onChange={(e) => setRol(e.target.value)} />
+                            onChange={(e) => setRol(e.target.value)}>
+                            <option value="">Seleccione una opcion</option>
+                            <option value="administrador">Administrador</option>
+                            <option value="ventas">Ventas</option>
+                            <option value="bodegas">Bodegas</option>
+                        </select>
                         <label className='label-tercero' for="">Rol</label>
                     </div>
                     <div className='container-Input'>

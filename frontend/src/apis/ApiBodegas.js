@@ -21,21 +21,12 @@ export async function AgregarBodegas(bodega) {
 }
 
 export async function ActualizarBodega(bodega) {
+    console.log(bodega);
     const response = await axios.patch(`${endpoint}/`, {
         _id: bodega.id,
         nombre: bodega.nombre,
         direccion: bodega.direccion,
-        productos: [
-            {
-                codigo: bodega.codigo,
-                nombre: bodega.nombre,
-                tipoProducto: bodega.tipoProducto,
-                unidadMedida: bodega.unidadMedida,
-                valorUnitario: bodega.valorUnitario,
-                Existencias: bodega.Existencias,
-                PorcentajeIva: bodega.PorcentajeIva
-            }
-        ]
+        productos: bodega.productos
     })
     return response.data
 }

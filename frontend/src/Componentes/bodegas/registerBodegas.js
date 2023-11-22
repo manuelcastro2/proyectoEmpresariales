@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { AgregarBodegas, ActualizarBodega, ConsultarNombreBodega } from './../../apis/ApiBodegas'
 
 const RegisterUsuario = ({ Actualizar }) => {

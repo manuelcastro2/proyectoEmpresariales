@@ -24,7 +24,8 @@ const facturaShema = new conexion.Schema({
         nombre: { type: String },
         descripcion: { type: String },
         valorUnitario: { type: Number },
-        porcentajeIva: { type: Number },
+        porcentaje: { type: Number },
+        unidadMedida:{ type: String },    
         cantidad: { type: Number }
     }],
     totalOperacion: { type: Number },

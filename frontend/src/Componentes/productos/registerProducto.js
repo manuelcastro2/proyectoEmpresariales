@@ -14,7 +14,6 @@ const RegisterProducto = ({ Actualizar }) => {
     const [unidad, setUnidad] = useState("")
     const [valorUnitario, setValorUnitario] = useState(0)
     const [porcentajeIva, setPorcentajeIva] = useState(0)
-    const [existencia, setExistencia] = useState("")
     const [Accion, setAccion] = useState("")
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
 
@@ -29,8 +28,8 @@ const RegisterProducto = ({ Actualizar }) => {
             descripcion: descripcion,
             tipoProducto: tipoProducto,
             unidadMedida: unidad,
+            existencias: 0,
             valorUnitario: valorUnitario,
-            existencias: existencia,
             porcentaje: porcentajeIva
         }
         if (Actualizar === undefined) {
@@ -44,7 +43,6 @@ const RegisterProducto = ({ Actualizar }) => {
                 setUnidad("")
                 setValorUnitario("")
                 setPorcentajeIva("")
-                setExistencia("")
             }
         } else {
             const response = ActualizarProducto(producto)
@@ -56,7 +54,6 @@ const RegisterProducto = ({ Actualizar }) => {
                 setUnidad("")
                 setValorUnitario("")
                 setPorcentajeIva("")
-                setExistencia("")
                 setAccion("actualizo")
             }
 
@@ -70,7 +67,7 @@ const RegisterProducto = ({ Actualizar }) => {
         if (Actualizar != undefined) {
             const getIdProducto = async () => {
                 const response = ConsultarCodigoProducto(Actualizar)
-                response.then(response=>{
+                response.then(response => {
                     response.products.forEach((item) => {
                         setId(item._id)
                         setCodeProduct(item.codigoProducto)
@@ -80,10 +77,9 @@ const RegisterProducto = ({ Actualizar }) => {
                         setUnidad(item.unidadMedida)
                         setPorcentajeIva(item.porcentaje)
                         setValorUnitario(item.valorUnitario)
-                        setExistencia(item.existencias)
                     })
                 })
-                
+
             }
             getIdProducto()
         }
@@ -151,15 +147,6 @@ const RegisterProducto = ({ Actualizar }) => {
                             value={valorUnitario}
                             onChange={(e) => setValorUnitario(e.target.value)} />
                         <label className='label-tercero' for="">Valor unitario</label>
-                    </div>
-                    <div className='container-Input'>
-                        <input className='Input-text' type="text"
-                            name="Existencia"
-                            placeholder='Existencia'
-                            id='Existencia'
-                            value={existencia}
-                            onChange={(e) => setExistencia(e.target.value)} />
-                        <label className='label-tercero' for="">Existencia</label>
                     </div>
                     <div className='container-Input'>
                         <input className='Input-text' type="text"

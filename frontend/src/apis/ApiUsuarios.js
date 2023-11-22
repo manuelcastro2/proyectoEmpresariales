@@ -44,3 +44,8 @@ export async function EliminarUsuarios(id) {
     const response = await axios.delete(`${endpoint}/${id}`)
     return response.data
 }
+
+export async function InicioUsuarios(cedula,clave){
+    const response = await axios.get(`${endpoint}/inicio/${cedula}/${clave}`)
+    return response.data
+}

@@ -437,16 +437,16 @@
     height: 40%;
     width: 100%;
     background: transparent;
-    transition: all 0.2s ;
+    transition: all 0.2s;
 }
 
-.button-opciones-cliente:focus{
-background: #72A1C0;
-}
-
-.button-opciones-proveedor:focus{
+.button-opciones-cliente:focus {
     background: #72A1C0;
-    }
+}
+
+.button-opciones-proveedor:focus {
+    background: #72A1C0;
+}
 
 .division {
     width: 100%;
@@ -465,7 +465,7 @@ background: #72A1C0;
     color: #1F3847;
 }
 
-.Button-acciones{
+.Button-acciones {
     padding: 5px 10px;
     margin-bottom: 10px;
     margin-right: 5px;
@@ -476,11 +476,11 @@ background: #72A1C0;
     font-weight: 500;
 }
 
-.Button-acciones:hover{
+.Button-acciones:hover {
     box-shadow: 0px 0px 5px #0C161C;
 }
 
-.Button-acciones:focus{
+.Button-acciones:focus {
     background-color: #0C161C;
     color: white;
 }

@@ -8,15 +8,9 @@ import Panel from './../general/Barra'
 import AlertRequerimiento from './../general/AlertRequerimiento';
 import PantallaCarga from './../general/PantallaCarga';
 import { ConsultarCodigoProducto, ConsultarProductos, EliminarProducto } from '../../apis/ApiProductos'
-//para invocar al backend en la parte de productos
 
-
-//funcion general
 const MenuTercero = () => {
 
-    //metodo state y de estados de los datos del usuario del inicio de sesion
-    //y los estados de mostrar y consultas y de los alert de que se guardo y elimino correctamente
-    //y las diferentes acciones que se hacen en el menu
     const { state } = useLocation();
     const [DatosUsuario, setDatosUsuario] = useState("")
     const [DatosMostrar, setDatosMostrar] = useState([])
@@ -29,7 +23,6 @@ const MenuTercero = () => {
     const [Id, SetId] = useState(undefined)
     const [loading, setLoading] = useState(false)
 
-    //validadcion de datos
     useEffect(() => {
         if (state && state.DatosUsuario) {
             setDatosUsuario(state.DatosUsuario);
@@ -39,7 +32,6 @@ const MenuTercero = () => {
         }
     }, []);
 
-    //funcion de mostrar si es general o especifico
     const Vista = () => {
         if (busqueda.trim() != "") {
             MostrarBusqueda()
@@ -48,7 +40,6 @@ const MenuTercero = () => {
         }
     }
 
-    //funcion de consulta todo
     const MostrarTodo = async () => {
         setLoading(true)
         const response = ConsultarProductos()
@@ -59,18 +50,16 @@ const MenuTercero = () => {
 
     }
 
-    //funcion de consulta especifica
     const MostrarBusqueda = async () => {
         const response = ConsultarCodigoProducto(busqueda)
-        response.then(response=>{
+        response.then(response => {
             setDatosMostrar(response.products)
         })
-        
+
     }
 
-    //funcion de eliminar productos
     const EliminarProducto = async (id) => {
-        const response =EliminarProducto(id)
+        const response = EliminarProducto(id)
         setDato("Producto")
         setAccion("elimino")
         Vista()
@@ -116,13 +105,19 @@ const MenuTercero = () => {
                                 <div className='text-Mostrar'>
                                     Valor unitario: {item.valorUnitario}
                                 </div>
-                                <div className='text-Mostrar'>
-                                    <button className='Button-acciones' onClick={() => {
-                                        SetId(item.codigoProducto)
-                                        setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
-                                    }} type="submit">Actualizar</button>
-                                    <button className='Button-acciones' onClick={() => EliminarProducto(item._id)} type="submit">Eliminar</button>
-                                </div>
+                                {DatosUsuario.rol != "ventas" ? (
+                                    <div className='text-Mostrar'>
+                                        <button className='Button-acciones' onClick={() => {
+                                            SetId(item.codigoProducto)
+                                            setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
+                                        }} type="submit">Actualizar</button>
+                                        <button className='Button-acciones' onClick={() => EliminarProducto(item._id)} type="submit">Eliminar</button>
+                                    </div>
+                                ) : (
+                                    <div>
+
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -142,10 +137,16 @@ const MenuTercero = () => {
             <div className='container-principal'>
                 <div className='container-menu'>
                     <Banner DatosUsuario={DatosUsuario}></Banner>
-                    <button onClick={() => {
-                        setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
-                        SetId(undefined)
-                    }} className='button-Agregar' type="submit"><p className='text-PANEL'>Agregar</p></button>
+                    {DatosUsuario.rol != "ventas" ? (
+                        <button onClick={() => {
+                            setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
+                            SetId(undefined)
+                        }} className='button-Agregar' type="submit"><p className='text-PANEL'>Agregar</p></button>
+                    ) : (
+                        <div>
+
+                        </div>
+                    )}
                 </div>
                 <div className='container-panel'>
                     <Panel panel="Lista Productos"></Panel>

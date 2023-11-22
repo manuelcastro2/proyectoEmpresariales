@@ -8,13 +8,13 @@ const bodegasShema = new conexion.Schema({
     },
     direccion: { type: String },
     productos: [{
-        codigo:{type:Number},
+        codigoProducto:{type:Number},
         nombre: { type: String },
         tipoProducto: { type: String },
         unidadMedida: { type: String },
         valorUnitario: { type: Number },
-        Existencias: { type: Number },
-        PorcentajeIva: { type: Number },
+        existencias: { type: Number },
+        porcentaje: { type: Number },
     }]
 },{
     collection: 'bodegas',
