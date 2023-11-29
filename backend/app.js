@@ -6,11 +6,8 @@ const winerieRouter = require('./routers/bodegasRouter')
 const thirdRouter = require('./routers/tercerosRouter')
 const productRouter = require('./routers/productosRouter')
 const facturaRouter = require('./routers/facturasRouter')
-const { FRONTEND_URL } = require('./config')
 const app = express()
-app.use(cors({
-    origin: FRONTEND_URL
-}))
+app.use(cors())
 app.use(bodyParser.json())
 
 app.use('/usuarios', userRouter);
@@ -19,5 +16,5 @@ app.use('/terceros', thirdRouter);
 app.use('/productos', productRouter);
 app.use('/facturas', facturaRouter);
 
-const PORT = process.env.PORT || 3333;
+const PORT = 3333;
 app.listen(PORT);
