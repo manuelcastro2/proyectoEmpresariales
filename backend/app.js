@@ -6,9 +6,12 @@ const winerieRouter = require('./routers/bodegasRouter')
 const thirdRouter = require('./routers/tercerosRouter')
 const productRouter = require('./routers/productosRouter')
 const facturaRouter = require('./routers/facturasRouter')
+import { FRONTEND_URL } from './config.js'
 
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: FRONTEND_URL
+}))
 app.use(bodyParser.json())
 
 app.use('/usuarios', userRouter);
