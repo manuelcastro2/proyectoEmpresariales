@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const endpoint = process.env.VITE_BACKEND_URL || 'http://localhost:3333';
+const endpoint = 'https://backend-proyecto-5rkk.onrender.com';
 const usuariosEndpoint = `${endpoint}/usuarios`;
 
 export async function ConsultarTodosUsuarios() {
@@ -42,11 +42,11 @@ export async function ActualizarUsuarios(usuario) {
 }
 
 export async function EliminarUsuarios(id) {
-    const response = await axios.delete(`${endpoint}/${id}`)
+    const response = await axios.delete(`${usuariosEndpoint}/${id}`)
     return response.data
 }
 
 export async function InicioUsuarios(cedula,clave){
-    const response = await axios.get(`${endpoint}/inicio/${cedula}/${clave}`)
+    const response = await axios.get(`${usuariosEndpoint}/inicio/${cedula}/${clave}`)
     return response.data
 }

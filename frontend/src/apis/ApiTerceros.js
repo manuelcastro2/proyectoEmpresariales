@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const endpoint = process.env.VITE_BACKEND_URL || 'http://localhost:3333';
+const endpoint = 'https://backend-proyecto-5rkk.onrender.com';
 const tercerosEndpoint = `${endpoint}/terceros`;
 
 export async function ConsultarTodosTerceros() {
