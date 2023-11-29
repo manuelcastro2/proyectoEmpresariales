@@ -1,22 +1,22 @@
 import axios from "axios";
 
-const endpoint = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3333';
-const usuariosEndpoint = `${endpoint}/productos`;
+const endpoint = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
+const productosEndpoint = `${endpoint}/productos`;
 
 export async function ConsultarProductos() {
-    const response = await axios.get(`${endpoint}/`)
+    const response = await axios.get(`${productosEndpoint}/`)
     return response.data
 }
 
 export async function ConsultarCodigoProducto(codigo) {
-    const response = await axios.post(`${endpoint}/codigoProducto`, {
+    const response = await axios.post(`${productosEndpoint}/codigoProducto`, {
         codigoProducto: codigo
     })
     return response.data
 }
 
 export async function AgregarProductos(producto) {
-    const response = await axios.post(`${endpoint}/`, {
+    const response = await axios.post(`${productosEndpoint}/`, {
         codigoProducto: producto.codigoProducto,
         nombre: producto.nombre,
         descripcion: producto.descripcion,
@@ -30,7 +30,7 @@ export async function AgregarProductos(producto) {
 }
 
 export async function ActualizarProducto(producto) {
-    const response = await axios.patch(`${endpoint}/`, {
+    const response = await axios.patch(`${productosEndpoint}/`, {
         codigoProducto: producto.codigoProducto,
         nombre: producto.nombre,
         descripcion: producto.descripcion,
@@ -45,6 +45,6 @@ export async function ActualizarProducto(producto) {
 
 
 export async function EliminarProducto(id) {
-    const response = await axios.delete(`${endpoint}/${id}`)
+    const response = await axios.delete(`${productosEndpoint}/${id}`)
     return response.data
 }

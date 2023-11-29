@@ -1,20 +1,20 @@
 import axios from "axios";
 
-const endpoint = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3333';
-const usuariosEndpoint = `${endpoint}/bodegas`;
+const endpoint = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
+const bodegasEndpoint = `${endpoint}/bodegas`;
 
 export async function ConsultarBodegas() {
-    const response = await axios.get(`${endpoint}/`)
+    const response = await axios.get(`${bodegasEndpoint}/`)
     return response.data
 }
 
 export async function ConsultarNombreBodega(nombre) {
-    const response = await axios.get(`${endpoint}/${nombre}`)
+    const response = await axios.get(`${bodegasEndpoint}/${nombre}`)
     return response.data
 }
 
 export async function AgregarBodegas(bodega) {
-    const response = await axios.post(`${endpoint}/`, {
+    const response = await axios.post(`${bodegasEndpoint}/`, {
         nombre: bodega.nombre,
         direccion: bodega.direccion
     })
@@ -23,7 +23,7 @@ export async function AgregarBodegas(bodega) {
 
 export async function ActualizarBodega(bodega) {
     console.log(bodega);
-    const response = await axios.patch(`${endpoint}/`, {
+    const response = await axios.patch(`${bodegasEndpoint}/`, {
         _id: bodega.id,
         nombre: bodega.nombre,
         direccion: bodega.direccion,
@@ -34,6 +34,6 @@ export async function ActualizarBodega(bodega) {
 
 
 export async function EliminarBodega(id) {
-    const response = await axios.delete(`${endpoint}/${id}`)
+    const response = await axios.delete(`${bodegasEndpoint}/${id}`)
     return response.data
 }

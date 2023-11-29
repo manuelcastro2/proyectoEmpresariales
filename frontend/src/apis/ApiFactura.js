@@ -1,27 +1,27 @@
 import axios from "axios";
 
-const endpoint = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3333';
-const usuariosEndpoint = `${endpoint}/facturas`;
+const endpoint = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
+const facturasEndpoint = `${endpoint}/facturas`;
 
 export async function ConsultarFacturas() {
-    const response = await axios.get(`${endpoint}/`)
+    const response = await axios.get(`${facturasEndpoint}/`)
     return response.data
 }
 
 export async function ConsultaPorRango(fechainicio, fechafinal) {
-    const response = await axios.get(`${endpoint}/filtrofecha/${fechainicio}/${fechafinal}`)
+    const response = await axios.get(`${facturasEndpoint}/filtrofecha/${fechainicio}/${fechafinal}`)
     return response.data
 }
 
 export async function ConsultarCodigoFacturas(codigo) {
-    const response = await axios.post(`${endpoint}/filtro`, {
+    const response = await axios.post(`${facturasEndpoint}/filtro`, {
         nroFactura: codigo
     })
     return response.data
 }
 
 export async function AgregarFacturas(factura) {
-    const response = await axios.post(`${endpoint}/`, {
+    const response = await axios.post(`${facturasEndpoint}/`, {
         nroFactura: factura.nroFactura,
         tipoFactura: factura.tipoFactura,
         tercero: factura.tercero,
@@ -34,7 +34,7 @@ export async function AgregarFacturas(factura) {
 }
 
 export async function ActualizarFactura(factura) {
-    const response = await axios.patch(`${endpoint}/`, {
+    const response = await axios.patch(`${facturasEndpoint}/`, {
         _id: factura.id,
         nroFactura: factura.nroFactura,
         tipoFactura: factura.tipoFactura,
@@ -48,6 +48,6 @@ export async function ActualizarFactura(factura) {
 }
 
 export async function EliminarFactura(id) {
-    const response = await axios.delete(`${endpoint}/${id}`)
+    const response = await axios.delete(`${facturasEndpoint}/${id}`)
     return response.data
 }

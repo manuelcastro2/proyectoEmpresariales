@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const endpoint = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3333';
+const endpoint = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
 const usuariosEndpoint = `${endpoint}/usuarios`;
 
 export async function ConsultarTodosUsuarios() {
@@ -9,7 +9,7 @@ export async function ConsultarTodosUsuarios() {
 }
 
 export async function ConsultarRolUsuario(Rol) {
-    const response = await axios.get(`${endpoint}/${Rol}`)
+    const response = await axios.get(`${usuariosEndpoint}/${Rol}`)
     return response.data
 }
 
@@ -19,7 +19,7 @@ export async function ConsultarDocumentoUsuarios(documento) {
 }
 
 export async function AgregarUsuarios(usuario) {
-    const response = await axios.post(`${endpoint}/`, {
+    const response = await axios.post(`${usuariosEndpoint}/`, {
         nombre: usuario.nombre,
         apellido: usuario.apellido,
         cedula: usuario.cedula,
@@ -30,7 +30,7 @@ export async function AgregarUsuarios(usuario) {
 }
 
 export async function ActualizarUsuarios(usuario) {
-    const response = await axios.patch(`${endpoint}/`, {
+    const response = await axios.patch(`${usuariosEndpoint}/`, {
         id: usuario.id,
         nombre: usuario.nombre,
         apellido: usuario.apellido,
