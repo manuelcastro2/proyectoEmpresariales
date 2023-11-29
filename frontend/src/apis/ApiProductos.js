@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const endpoint = process.env.VITE_BACKEND_URL || 'http://localhost:3333';
+const endpoint = import.meta.VITE_BACKEND_URL || 'http://localhost:3333';
 const productosEndpoint = `${endpoint}/productos`;
 
 export async function ConsultarProductos() {
