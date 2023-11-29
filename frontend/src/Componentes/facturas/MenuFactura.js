@@ -91,7 +91,37 @@ const MenuTercero = () => {
                                     Tipo tercero: {item.tercero.tipoTercero}
                                 </div>
                                 <div className='text-Mostrar'>
+                                    Bodega: {item.bodega.nombre}
+                                </div>
+                                <div className='text-Mostrar'>
                                     Fecha: {item.fecha}
+                                </div>
+                                <div className='caja-elementos'>
+                                    Elementos:
+                                    <div className='barra'>
+                                        <div className='datos'>
+                                            Nombre
+                                        </div>
+                                        <div className='datos'>
+                                            Cantidad
+                                        </div>
+                                        <div className='datos'>
+                                            Valor unitario
+                                        </div>
+                                    </div>
+                                    {item.elementos.map((item) => (
+                                        <div className='elementos'>
+                                            <div className='datos'>
+                                                {item.nombre}
+                                            </div>
+                                            <div className='datos'>
+                                                {item.cantidad}
+                                            </div>
+                                            <div className='datos'>
+                                                {item.valorUnitario}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                                 <div className='text-Mostrar'>
                                     ValorTotal: {item.totalOperacion}

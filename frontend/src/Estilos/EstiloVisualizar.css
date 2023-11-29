@@ -272,3 +272,30 @@ th {
     height: 50px;
     width: auto;
 }
+
+.caja-elementos {
+    gap: 2px;
+    padding-left: 20px;
+    width: 450px;
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.elementos {
+    background-color: #72A1C0;
+    width: 100%;
+    display: flex;
+    justify-content: baseline;
+    align-items: center;
+}
+
+.datos {
+    width: 170px;
+}
+
+.barra {
+    width: 100%;
+    display: flex;
+}
