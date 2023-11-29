@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const endpoint = 'http://localhost:3333/facturas'
+const endpoint = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3333';
+const usuariosEndpoint = `${endpoint}/facturas`;
 
 export async function ConsultarFacturas() {
     const response = await axios.get(`${endpoint}/`)

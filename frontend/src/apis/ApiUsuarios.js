@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const endpoint = 'http://localhost:3333/usuarios'
+const endpoint = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3333';
+const usuariosEndpoint = `${endpoint}/usuarios`;
 
 export async function ConsultarTodosUsuarios() {
-    const response = await axios.get(`${endpoint}/`)
+    const response = await axios.get(`${usuariosEndpoint}/`)
     return response.data
 }
 
