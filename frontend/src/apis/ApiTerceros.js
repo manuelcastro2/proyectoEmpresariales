@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const endpoint = process.env.VITE_BACKEND_URL;
+const endpoint = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
 const tercerosEndpoint = `${endpoint}/terceros`;
 
 export async function ConsultarTodosTerceros() {
