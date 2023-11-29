@@ -12,12 +12,8 @@ import AlertRequerimiento from './../general/AlertRequerimiento';
 import PantallaCarga from './../general/PantallaCarga';
 import { ConsultarTodosUsuarios, ConsultarDocumentoUsuarios, ConsultarRolUsuario, EliminarUsuarios } from './../../apis/ApiUsuarios'
 
-//para invocar al backend en la parte de usuarios
 const MenuTercero = () => {
 
-    //metodo state y de estados de los datos del usuario del inicio de sesion
-    //y los estados de mostrar y consultas y de los alert de que se guardo y elimino correctamente
-    //y las diferentes acciones que se hacen en el menu
     const { state } = useLocation();
     const [DatosUsuario, setDatosUsuario] = useState("")
     const [DatosMostrar, setDatosMostrar] = useState([])

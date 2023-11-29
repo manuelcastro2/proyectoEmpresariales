@@ -1,5 +1,6 @@
 const express = require('express')
 const facturas = require('../models/facturasModel')
+const bodegas = require('../models/bodegasModel')
 const facturasRouter = express.Router()
 
 facturasRouter.get('/', (req, res) => {
@@ -20,8 +21,13 @@ facturasRouter.post('/', (req, res) => {
 
 facturasRouter.patch('/', (req, res) => {
     const factura = req.body
-    facturas.updateOne({ nroFactura: factura.nroFactura }, factura)
+    console.log(factura.bodega);
+    bodegas.updateOne({ _id: factura.bodega.id }, factura.bodega).then(
+        facturas.updateOne({ nroFactura: factura.nroFactura }, factura)
         .then(datos => res.json({ facturas: datos })).catch(error => res.json({ mensaje: error }))
+    )
+    
+
 })
 
 facturasRouter.delete('/:id', (req, res) => {

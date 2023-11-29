@@ -1,60 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import './../../Estilos/EstiloVisualizar.css'
-import { ConsultarProductos, ActualizarProducto } from './../../apis/ApiProductos'
-import { ConsultarTipoTercero } from './../../apis/ApiTerceros'
-import { AgregarFacturas,ConsultarCodigoFacturas } from './../../apis/ApiFactura'
-import { ActualizarBodega, ConsultarBodegas } from './../../apis/ApiBodegas'
+import { ConsultarProductos, ActualizarProducto } from '../../apis/ApiProductos'
+import { ConsultarTipoTercero } from '../../apis/ApiTerceros'
+import { ActualizarFactura, ConsultarCodigoFacturas } from '../../apis/ApiFactura'
+import { ConsultarNombreBodega } from '../../apis/ApiBodegas'
 
-const RegisterFacturas = ({ Datos }) => {
+const RegisterFacturas = ({ Datos, Actualizar }) => {
 
     const [typeBill, settypeBill] = useState("")
     const [nroFacturas, setNroFactura] = useState("")
     const [date, setDate] = useState("")
     const [terceros, setTeceros] = useState([])
     const [Idtercero, setIdTeceros] = useState("")
-    const [bodegas, setBodegas] = useState([])
+    const [bodegas, setBodegas] = useState('')
     const [IdBodegas, setIdBodegas] = useState("")
     const [productos, setProductos] = useState([])
-    const [totalOperation, settotalOperation] = useState(0)
+    const [totalOperation, settotalOperation] = useState()
     const [count, setcount] = useState({})
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
     const [ArrayProductos, setArrayProductos] = useState([])
-    const [ArrayBodegas, setArrayBodegas] = useState([])
     const [EstadoAgregarProductos, setEstadoAgregarProductos] = useState(false)
-    const [ProductosBodega, setProductosBodega] = useState([])
+    const [MostrarTercero, setMostrarTercero] = useState("")
+    var ArrayBodega = []
 
     useEffect(() => {
-        BodegasAll()
-        ProductosAll()
-        TercerosAll()
+        if (!ArrayProductos.length) {
+            BuscarFactura()
+            TercerosAll()
+            ProductosAll()
+            handleCheckboxChange()
+        }
         let total = 0;
         ArrayProductos.forEach((item) => {
-            total += item.ValorProducto || 0;
+            total += Number(item.cantidad * (item.valorUnitario + (item.valorUnitario * item.porcentaje)));
         });
         if (total !== totalOperation) {
             settotalOperation(total);
         }
-    }, [ArrayProductos, totalOperation])
+    }, [ArrayProductos])
 
     const Save = (e) => {
         e.preventDefault();
 
-        // Validación de datos
+        ArrayProductos.forEach((item) => {
+            ArrayBodega.push({
+                cantidad: item.cantidad,
+                codigoProducto: item.codigoProducto,
+                nombre: item.nombre,
+                porcentaje: item.porcentaje,
+                unidadMedida: item.unidadMedida,
+                valorUnitario: item.valorUnitario,
+                existencias: item.cantidad
+            })
+        });
         if (!typeBill || !nroFacturas || !date || !Idtercero || ArrayProductos.length === 0) {
             console.error("Por favor, complete todos los campos obligatorios.");
             // Puedes mostrar un mensaje al usuario indicando que algunos campos son obligatorios
             return;
         }
-        const factura = {
-            tipoFactura: typeBill,
+        console.log(ArrayBodega);
+        ArrayProductos.forEach((item) => {
+            ActualizarProducto({
+                codigoProducto: item.codigoProducto,
+                existencias: item.existencias
+            })
+        })
+        let factura = {
             nroFactura: nroFacturas,
             totalOperacion: totalOperation,
             fecha: date,
-            bodega: IdBodegas,
             tercero: Idtercero,
-            elementos: ArrayProductos
+            elementos: ArrayProductos,
+            bodega: {
+                id: bodegas.id,
+                nombre: bodegas.nombre,
+                direccion: bodegas.direccion,
+                productos: ArrayBodega
+            }
         }
-        const response = AgregarFacturas(factura).then(() => {
+
+        console.log(factura);
+        ActualizarFactura(factura).then((datos) => {
             const selectTipoFactura = document.getElementById("SelectTipoFactura")
             const selectTercero = document.getElementById("SelectTercero")
             const selectBodega = document.getElementById("SelectBodega")
@@ -65,52 +91,11 @@ const RegisterFacturas = ({ Datos }) => {
             setDate("")
             settotalOperation("")
             setArrayProductos([])
-        })
-
-        ArrayProductos.forEach((item) => {
-            ActualizarProducto({
-                codigoProducto: item.codigoProducto,
-                existencias: item.existencias
-            })
-        })
-        let BodegasAgregar = {
-            id: IdBodegas.id,
-            productos: []
-        }
-        if (typeBill === "FacturaCompra") {
-            const nuevosProductos = [];
-            const ProductosActualizar = []
-            ArrayBodegas.forEach((item1) => {
-                const existeEnBodega = ProductosBodega.some((item2) => item1.codigoProducto === item2.codigoProducto);
-
-                if (existeEnBodega) {
-                    ProductosActualizar.push(item1)
-                } else {
-                    nuevosProductos.push(item1);
-                }
-            });
-
-            BodegasAgregar = {
-                id: IdBodegas.id,
-                productos: [...ProductosActualizar, ...nuevosProductos]
-            };
-        } else {
-            const productosEnBodega = ArrayProductos.filter((item1) =>
-                ProductosBodega.some((item2) => item1.codigoProducto === item2.codigoProducto)
-            );
-            BodegasAgregar = {
-                id: IdBodegas.id,
-                productos: productosEnBodega
-            };
-        }
-        console.log(BodegasAgregar);
-        ActualizarBodega(BodegasAgregar).then(datos => {
             console.log(datos);
-        }).catch(daatos => console.log(daatos))
-        setEstadoAlertAccion(!EstadoAlertAccion);
+        })
 
     }
-    
+
     const TercerosAll = () => {
         if (typeBill == "FacturaVenta") {
             const response = ConsultarTipoTercero("cliente")
@@ -124,6 +109,7 @@ const RegisterFacturas = ({ Datos }) => {
             })
         }
     }
+
     const ProductosAll = () => {
         const response = ConsultarProductos()
         response.then(datos => {
@@ -132,9 +118,38 @@ const RegisterFacturas = ({ Datos }) => {
     }
 
     const BodegasAll = () => {
-        const Response = ConsultarBodegas()
-        Response.then(datos => {
-            setBodegas(datos.bodegas)
+        ConsultarNombreBodega(IdBodegas).then(datos => {
+            datos.bodegas.forEach(bodegas => {
+                setBodegas({
+                    id: bodegas._id,
+                    nombre: bodegas.nombre,
+                    direccion: bodegas.direccion
+                })
+            })
+        })
+    }
+
+    const BuscarFactura = async () => {
+        ConsultarCodigoFacturas(Actualizar).then(datos => {
+            datos.facturas.forEach((item) => {
+                settypeBill(item.tipoFactura)
+                setNroFactura(item.nroFactura)
+                setDate(item.fecha)
+                setIdBodegas(item.bodega.nombre)
+                setArrayProductos(item.elementos)
+                settotalOperation(item.totalOperacion)
+                item.elementos.forEach((item) => {
+                    ArrayBodega.push({
+                        cantidad: item.cantidad,
+                        codigoProducto: item.codigoProducto,
+                        nombre: item.nombre,
+                        porcentaje: item.porcentaje,
+                        unidadMedida: item.unidadMedida,
+                        valorUnitario: item.valorUnitario,
+                        existencias: item.cantidad
+                    })
+                })
+            })
         })
     }
 
@@ -157,26 +172,19 @@ const RegisterFacturas = ({ Datos }) => {
                         nombre: selectedProduct.nombre,
                         unidadMedida: selectedProduct.unidadMedida,
                         cantidad: Number(count[productId]) || 0,
-                        existencias: selectedProduct.existencias - Number(count[productId]),
-                        valorUnitario: Number(selectedProduct.valorUnitario),
-                        porcentaje: selectedProduct.porcentaje,
-                        ValorProducto: Number(count[productId] * (selectedProduct.valorUnitario + (selectedProduct.valorUnitario * selectedProduct.porcentaje)))
-                    }
-                ]);
-                setArrayBodegas(prevArray => [
-                    ...prevArray,
-                    {
-                        codigoProducto: selectedProduct.codigoProducto,
-                        tipoProducto: selectedProduct.tipoProducto,
-                        nombre: selectedProduct.nombre,
-                        unidadMedida: selectedProduct.unidadMedida,
-                        existencias: Number(count[productId]),
+                        existencias: Number(selectedProduct.existencias) - Number(count[productId]),
                         valorUnitario: Number(selectedProduct.valorUnitario),
                         porcentaje: selectedProduct.porcentaje,
                         ValorProducto: Number(count[productId] * (selectedProduct.valorUnitario + (selectedProduct.valorUnitario * selectedProduct.porcentaje)))
                     }
                 ]);
             } else {
+                let existe = 0;
+                if (selectedProduct.existencias) {
+                    existe = Number(selectedProduct.existencias) + Number(count[productId])
+                } else {
+                    existe = Number(count[productId])
+                }
                 setArrayProductos(prevArray => [
                     ...prevArray,
                     {
@@ -185,20 +193,7 @@ const RegisterFacturas = ({ Datos }) => {
                         tipoProducto: selectedProduct.tipoProducto,
                         unidadMedida: selectedProduct.unidadMedida,
                         cantidad: Number(count[productId]) || 0,
-                        existencias: selectedProduct.existencias + Number(count[productId]),
-                        valorUnitario: Number(selectedProduct.valorUnitario),
-                        porcentaje: selectedProduct.porcentaje,
-                        ValorProducto: Number(count[productId] * (selectedProduct.valorUnitario + (selectedProduct.valorUnitario * selectedProduct.porcentaje)))
-                    }
-                ]);
-                setArrayBodegas(prevArray => [
-                    ...prevArray,
-                    {
-                        codigoProducto: selectedProduct.codigoProducto,
-                        tipoProducto: selectedProduct.tipoProducto,
-                        nombre: selectedProduct.nombre,
-                        unidadMedida: selectedProduct.unidadMedida,
-                        existencias: Number(count[productId]) + selectedProduct.existencias,
+                        existencias: existe,
                         valorUnitario: Number(selectedProduct.valorUnitario),
                         porcentaje: selectedProduct.porcentaje,
                         ValorProducto: Number(count[productId] * (selectedProduct.valorUnitario + (selectedProduct.valorUnitario * selectedProduct.porcentaje)))
@@ -206,9 +201,20 @@ const RegisterFacturas = ({ Datos }) => {
                 ]);
             }
         }
+    };
+
+
+    const handleCTercero = (Id) => {
         terceros.forEach((item) => {
-            if (item._id === Idtercero) {
+            if (item._id === Id) {
                 setIdTeceros({
+                    nombre: item.nombre,
+                    tipoTercero: item.tipoTercero,
+                    documento: item.documento,
+                    direccion: item.direccion,
+                    telefono: item.telefono
+                })
+                setMostrarTercero({
                     nombre: item.nombre,
                     tipoTercero: item.tipoTercero,
                     documento: item.documento,
@@ -217,18 +223,8 @@ const RegisterFacturas = ({ Datos }) => {
                 })
             }
         })
-
-        bodegas.forEach((item) => {
-            if (item._id === IdBodegas) {
-                setIdBodegas({
-                    id: item._id,
-                    nombre: item.nombre,
-                    direccion: item.direccion
-                })
-                setProductosBodega(item.productos)
-            }
-        })
     };
+
 
     return (
         <div className='container-RegistroTercero4'>
@@ -240,7 +236,10 @@ const RegisterFacturas = ({ Datos }) => {
                     <select className='Input-text'
                         value={typeBill}
                         id='SelectTipoFactura'
-                        onClick={TercerosAll}
+                        onClick={() => {
+                            TercerosAll()
+
+                        }}
                         onChange={(e) => {
                             settypeBill(e.target.value)
                         }}
@@ -277,28 +276,29 @@ const RegisterFacturas = ({ Datos }) => {
                         name="date"
                         placeholder='date'
                         id='date'
-                        value={date}
+                        value={date.split('T')[0]}
                         onChange={(e) => setDate(e.target.value)} />
                     <label className='label-tercero' for="">Date</label>
                 </div>
                 <div className='container-Input'>
                     <select className=' Input-text'
                         id='SelectBodega'
+                        value={IdBodegas}
+                        onClick={BodegasAll}
                         onChange={(e) => {
                             setIdBodegas(e.target.value);
                         }}>
-                        <option value="">Selecion una opcion</option>
-                        {bodegas.map((items) => (
-                            <option value={items._id}>{items.nombre}</option>
-                        ))}
+                        <option value="">{IdBodegas}</option>
                     </select>
                     <label className='label-tercero' for="">Bodegas</label>
                 </div>
                 <div className='container-Input'>
                     <select className=' Input-text'
                         id='SelectTercero'
+                        value={MostrarTercero}
                         onChange={(e) => {
-                            setIdTeceros(e.target.value)
+                            handleCTercero(e.target.value)
+                            setMostrarTercero(e.target.value)
                         }}>
                         <option value="">Selecion una opcion</option>
                         {terceros.map((items) => (
@@ -309,7 +309,7 @@ const RegisterFacturas = ({ Datos }) => {
                 </div>
                 <div className='container-elementos'>
                     <div className='container-agregar'>
-                        <label for="">Elementos</label>
+                        <label for="">Elementossss</label>
                         <button type="submit"
                             className='Button-acciones'
                             onClick={() => setEstadoAgregarProductos(!EstadoAgregarProductos)}>
@@ -332,7 +332,7 @@ const RegisterFacturas = ({ Datos }) => {
                                     ${item.valorUnitario}
                                 </div>
                                 <div className='caja-elemento4'>
-                                    ${item.ValorProducto}
+                                    ${item.cantidad * (item.valorUnitario + (item.valorUnitario * item.porcentaje))}
                                 </div>
                             </div>
                         ))}
@@ -351,7 +351,7 @@ const RegisterFacturas = ({ Datos }) => {
                     <button className='Button-Entrar' type="submit"
                         onClick={Save}>Enviar</button>
                 </div>
-            </div>
+            </div >
             {EstadoAlertAccion &&
                 <div className='container-Fondo'>
                     <div className='Container-Alert'>
@@ -364,7 +364,8 @@ const RegisterFacturas = ({ Datos }) => {
                     </div>
                 </div>
             }
-            {EstadoAgregarProductos &&
+            {
+                EstadoAgregarProductos &&
                 <div className='container-Fondo'>
                     <div className='container-RegistroTercero3'>
                         <button type="submit"
@@ -402,6 +403,14 @@ const RegisterFacturas = ({ Datos }) => {
                                 className='Button-acciones'
                                 onClick={() => {
                                     setEstadoAgregarProductos(!EstadoAgregarProductos)
+                                    let total = 0;
+                                    ArrayProductos.forEach((item) => {
+                                        total += item.ValorProducto || 0;
+                                    });
+                                    if (total !== totalOperation) {
+                                        total = totalOperation + total
+                                        settotalOperation(total);
+                                    }
                                 }}
                             >agregar</button>
                         </div>
@@ -409,7 +418,7 @@ const RegisterFacturas = ({ Datos }) => {
                 </div>
 
             }
-        </div>
+        </div >
     )
 }
 

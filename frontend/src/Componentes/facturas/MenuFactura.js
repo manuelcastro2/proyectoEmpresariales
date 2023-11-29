@@ -8,6 +8,7 @@ import Panel from './../general/Barra'
 import AlertRequerimiento from './../general/AlertRequerimiento';
 import PantallaCarga from './../general/PantallaCarga';
 import RegisterFactura from './registerFacturas'
+import ActualizarFacturas from './ActualizarFacturas'
 import { ConsultarFacturas, ConsultarCodigoFacturas, EliminarFactura } from '../../apis/ApiFactura'
 
 const MenuTercero = () => {
@@ -16,7 +17,7 @@ const MenuTercero = () => {
     const [DatosUsuario, setDatosUsuario] = useState("")
     const [DatosMostrar, setDatosMostrar] = useState([])
     const [EstadoRegistrarUsuario, setEstadoRegistrarUsuario] = useState(false)
-    const [Tercero, setTercero] = useState('')
+    const [EstadoActualizarFactura, setEstadoActulizarFactura] = useState(false)
     const [busqueda, setbusqueda] = useState("")
     const [EstadoSesion, SetEstadoSesion] = useState(false)
     const [EstadoAlertAccion, setEstadoAlertAccion] = useState(false)
@@ -116,7 +117,7 @@ const MenuTercero = () => {
                                         <div>
                                             <button className='Button-acciones' onClick={() => {
                                                 SetId(item.nroFactura)
-                                                setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
+                                                setEstadoActulizarFactura(!EstadoActualizarFactura)
                                             }} type="submit">Actualizar</button>
                                             <button className='Button-acciones' onClick={() => EliminarFacturas(item._id)} type="submit">Eliminar</button>
                                         </div>
@@ -177,6 +178,15 @@ const MenuTercero = () => {
                         <button onClick={() => {
                             Vista()
                             setEstadoRegistrarUsuario(!EstadoRegistrarUsuario)
+                        }} className='Button-Exit' type="submit">X</button>
+                    </div>
+                }
+                {EstadoActualizarFactura &&
+                    <div className='container-Fondo'>
+                        <ActualizarFacturas Datos={DatosUsuario} Actualizar={Id} ></ActualizarFacturas>
+                        <button onClick={() => {
+                            Vista()
+                            setEstadoActulizarFactura(!EstadoActualizarFactura)
                         }} className='Button-Exit' type="submit">X</button>
                     </div>
                 }
