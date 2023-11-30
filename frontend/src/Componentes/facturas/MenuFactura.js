@@ -184,7 +184,7 @@ const MenuTercero = () => {
                     }} className='button-Agregar' type="submit"><p className='text-PANEL'>Agregar</p></button>
                 </div>
                 <div className='container-panel'>
-                    <Panel panel="Lista facturas venta"></Panel>
+                    <Panel panel="Lista facturas"></Panel>
                     <div className='container-info'>
                         <div className='container-busqueda'>
                             <div className='container-busqueda-input'>
