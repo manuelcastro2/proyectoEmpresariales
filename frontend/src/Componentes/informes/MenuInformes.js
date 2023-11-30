@@ -89,7 +89,7 @@ function MenuInformes() {
                                             name="fechafinal"
                                             value={fechaFinal}
                                             onChange={(e) => setFechaFinal(e.target.value)} />
-                                        <label className='label-tercero' for="">Fecha inicial</label>
+                                        <label className='label-tercero' for="">Fecha final</label>
                                     </div>
                                     <div className='container-input-fechas'>
                                         <button
