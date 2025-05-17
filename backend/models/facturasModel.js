@@ -14,8 +14,9 @@ const facturaShema = new conexion.Schema({
         direccion: { type: String },
         telefono: { type: Number }
     },
-    fecha: Date,
+    fecha: { type: Date },
     bodega: {
+        _id: { type: String },
         nombre: { type: String },
         direccion: { type: String }
     },
@@ -25,7 +26,7 @@ const facturaShema = new conexion.Schema({
         descripcion: { type: String },
         valorUnitario: { type: Number },
         porcentaje: { type: Number },
-        unidadMedida:{ type: String },    
+        unidadMedida: { type: String },
         cantidad: { type: Number }
     }],
     totalOperacion: { type: Number },

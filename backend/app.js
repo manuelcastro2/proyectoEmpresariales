@@ -16,5 +16,4 @@ app.use('/terceros', thirdRouter);
 app.use('/productos', productRouter);
 app.use('/facturas', facturaRouter);
 
-const PORT = 3333;
-app.listen(PORT);
+module.exports=app

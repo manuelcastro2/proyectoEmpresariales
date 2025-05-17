@@ -19,16 +19,22 @@ facturasRouter.post('/', (req, res) => {
     facturaCompleta.save().then(datos => res.json({ facturas: datos })).catch(error => res.json({ mensaje: error }))
 })
 
-facturasRouter.patch('/', (req, res) => {
-    const factura = req.body
-    console.log(factura.bodega);
-    bodegas.updateOne({ _id: factura.bodega.id }, factura.bodega).then(
-        facturas.updateOne({ nroFactura: factura.nroFactura }, factura)
-        .then(datos => res.json({ facturas: datos })).catch(error => res.json({ mensaje: error }))
-    )
-    
+    facturasRouter.patch('/', (req, res) => {
+        const factura = req.body;
 
-})
+        const bodegaId = factura.bodega._id || factura.bodega.id;
+
+        bodegas.updateOne({ _id: bodegaId }, factura.bodega)
+            .then(() => {
+                return facturas.updateOne({ nroFactura: factura.nroFactura }, factura);
+            })
+            .then(datos => {
+                res.json({ facturas: datos });
+            })
+            .catch(error => {
+                res.status(500).json({ mensaje: error.message });
+            });
+    });
 
 facturasRouter.delete('/:id', (req, res) => {
     facturas.deleteOne({ _id: req.params.id })
